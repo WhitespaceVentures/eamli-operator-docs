@@ -17,27 +17,27 @@ Checkout the documentation [here](/Config.md)
 
 ### API Server
 
-Checkout the documentation [here](/Config.md)
+Checkout the documentation [here](/Config.md#api-server-config)
 
 ### Core Model Server
 
-Checkout the documentation [here](/Config.md)
+Checkout the documentation [here](/Config.md#coremodelserver-config)
 
 ### Executor
 
-Checkout the documentation [here](/Config.md)
+Checkout the documentation [here](/Config.md#executor-config)
 
 ### Product Server
 
-Checkout the documentation [here](/Config.md)
+Checkout the documentation [here](/Config.md#product-server-config)
 
 ### Source Data
 
-Checkout the documentation [here](/Config.md)
+Checkout the documentation [here](/Config.md#source-data-server-config)
 
 ### Web App
 
-Checkout the documentation [here](/Config.md)
+Checkout the documentation [here](/Config.md#webapp-ui-config)
 
 ## Contact
 

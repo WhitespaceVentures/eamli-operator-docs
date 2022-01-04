@@ -3,7 +3,7 @@
 Welcome to the eamli operator documentation site.
 
 ## Quick start
-To get started with the eamli operator check out the [Quickstart guide](/Quickstart.md) (Openshift)
+To get started with the eamli operator check out the [Quickstart guide](/QuickStart.md) (Openshift)
 
 ## Configuration
 

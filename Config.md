@@ -1,5 +1,38 @@
 # Eamli Service Configurations
 
+## Stack Config
+
+### Resources
+
+The Helm chart creates the following resources:
+* APIServer
+* CoreModelServer
+* Executor
+* ProductServer
+* SourceData
+* WebApp
+
+### Parameters
+
+| Parameter                                         | Description                                |
+| ------------------------------------------------- | ------------------------------------------ |
+| `license.accept`                                  | Flag, to confirm you accept the eamli [EULA](https://eamli.com/eula) |
+| `postgresql.host`                                 | Address of the PostgreSQL instance, reachable from within the cluster |
+| `postgresql.port`                                 | Port to use for sending requests to the PostgreSQL instance |
+| `postgresql.adminUsername`                        | PostgreSQL admin username, to generate users and databases with |
+| `postgresql.adminDB`                              | Default PostgreSQL database |
+| `ingress.enabled`                                 | If enabled, creates the Ingress/Route definition |
+| `ingress.host`                                    | Ingress/Route hostname/ip to process the incoming http traffic |
+| `ingress.annotations`                             | Arbitrary non-identifying metadata |
+| `ingress.tls.enabled`                             | Enable TLS for the service, to force HTTPS |
+| `ingress.tls.secretName`                          | Name of the K8s Secret that contains the TLS certificate |
+| `apiserver`                                       | see [API Server Config](https://whitespaceventures.github.io/eamli-operator-docs/Config.html#api-server-config) |
+| `coremodelserver`                                 | see [Core Model Server Config](https://whitespaceventures.github.io/eamli-operator-docs/Config.html#coremodelserver-config) |
+| `executor`                                        | see [Executor Config](https://whitespaceventures.github.io/eamli-operator-docs/Config.html#executor-config) |
+| `productserver`                                   | see [Product Server Config](https://whitespaceventures.github.io/eamli-operator-docs/Config.html#product-server-config) |
+| `sourcedata`                                      | see [Source Data Config](https://whitespaceventures.github.io/eamli-operator-docs/Config.html#source-data-server-config) |
+| `webapp`                                          | see [Webapp UI Config](https://whitespaceventures.github.io/eamli-operator-docs/Config.html#webapp-ui-config) |
+
 ## API Server Config
 
 ### Resources
@@ -16,8 +49,6 @@ The Helm chart creates the following resources:
 
 ### Requirements
 * Kubernetes version 1.13.0 or later
-* Helm version 3.0.0 or later
-* Service account with permission to install charts onto the cluster
 * Database server
 
 ### Parameters
@@ -25,35 +56,17 @@ The Helm chart creates the following resources:
 | Parameter                                         | Description                                |
 | ------------------------------------------------- | ------------------------------------------ |
 | `replicaCount`                                    | Specified number of identical pods to be available |
-| `isOpenshift`                                     | Marks the chart as being installed onto an Openshift cluster |
 | `image.repository`                                | Image repository address from which the helm chart will pull the image |
 | `image.pullPolicy`                                | The image PullPolicy affect when the kubelet attempts to pull the specified image |
 | `image.tag`                                       | The tag determines which version of the image to pull |
-| `imagePullSecrets`                                | Secrets to be used to authentication, when pulling down images |
-| `nameOverride`                                    | Overrides the default name for resources |
-| `fullnameOverride`                                | Overrides the default full name (`{release/name}`) for resources |
 | `serviceAccount.annotations`                      | Arbitrary non-identifying metadata |
-| `serviceAccount.name`                             | Identifying name used for the service account |
 | `serviceAccount.rules`                             | List of rules that apply to the service account |
 | `podAnnotations`                                  | Arbitrary non-identifying metadata |
 | `podSecurityContext`                              | Pod-level security attributes and common container settings |
 | `securityContext`                                 | Defines privilege and access control settings for a Pod or Container |
-| `service.type`                                    | How the Service is exposed (ExternalName/ClusterIP/NodePort/LoadBalancer) |
-| `service.port`                                    | Port that traffic should be forwarded onto on the pod/s |
-| `ingress.enabled`                                 | If enabled, creates the Ingress/Route definition |
-| `ingress.host`                                    | Ingress/Route hostname/ip to process the incoming http traffic |
-| `ingress.annotations`                             | Arbitrary non-identifying metadata |
-| `ingress.tls.enabled`                             | Enable TLS for the service, to force HTTPS |
-| `ingress.tls.secretName`                          | Name of the K8s Secret that contains the TLS certificate |
-| `resources.limits.cpu`                            | Maximum amount of compute CPU allowed |
-| `resources.limits.memory`                         | Maximum amount of compute Memory allowed |
-| `resources.requests.cpu`                          | Minimum amount of compute CPU required |
-| `resources.requests.memory`                       | Minimum amount of compute Memory required |
 | `autoscaling.enabled`                             | Enable autoscaling on the deployment |
 | `autoscaling.minReplicas`                         | MinReplicas is the lower limit for the number of replicas to which the autoscaler can scale down |
 | `autoscaling.maxReplicas`                         | Upper limit for the number of pods that can be set by the autoscaler |
-| `autoscaling.targetCPUUtilizationPercentage`      | Target average CPU utilization over all pods |
-| `autoscaling.targetMemoryUtilizationPercentage`   | Target average Memory utilization over all pods |
 | `nodeSelector`                                    | Selector which must match a node's labels for the pod to be scheduled on that node |
 | `tolerations`                                     | Tolerates any taint that matches any listed values |
 | `affinity`                                        | Determines how the pods should be schedule |
@@ -81,8 +94,7 @@ The Helm chart creates the following resources:
 
 ### Requirements
 * Kubernetes version 1.13.0 or later
-* Helm version 3.0.0 or later
-* Service account with permission to install charts onto the cluster
+* Database server
 
 ### Parameters
 
@@ -92,31 +104,14 @@ The Helm chart creates the following resources:
 | `image.repository`                                | Image repository address from which the helm chart will pull the image |
 | `image.pullPolicy`                                | The image PullPolicy affect when the kubelet attempts to pull the specified image |
 | `image.tag`                                       | The tag determines which version of the image to pull |
-| `imagePullSecrets`                                | Secrets to be used to authentication, when pulling down images |
-| `nameOverride`                                    | Overrides the default name for resources |
-| `fullnameOverride`                                | Overrides the default full name (`{release/name}`) for resources |
 | `serviceAccount.annotations`                      | Arbitrary non-identifying metadata |
-| `serviceAccount.name`                             | Identifying name used for the service account |
 | `serviceAccount.rules`                             | List of rules that apply to the service account |
 | `podAnnotations`                                  | Arbitrary non-identifying metadata |
 | `podSecurityContext`                              | Pod-level security attributes and common container settings |
 | `securityContext`                                 | Defines privilege and access control settings for a Pod or Container |
-| `service.type`                                    | How the Service is exposed (ExternalName/ClusterIP/NodePort/LoadBalancer) |
-| `service.port`                                    | Port that traffic should be forwarded onto on the pod/s |
-| `ingress.enabled`                                 | If enabled, creates the Ingress/Route definition |
-| `ingress.host`                                    | Ingress/Route hostname/ip to process the incoming http traffic |
-| `ingress.annotations`                             | Arbitrary non-identifying metadata |
-| `ingress.tls.enabled`                             | Enable TLS for the service, to force HTTPS |
-| `ingress.tls.secretName`                          | Name of the K8s Secret that contains the TLS certificate |
-| `resources.limits.cpu`                            | Maximum amount of compute CPU allowed |
-| `resources.limits.memory`                         | Maximum amount of compute Memory allowed |
-| `resources.requests.cpu`                          | Minimum amount of compute CPU required |
-| `resources.requests.memory`                       | Minimum amount of compute Memory required |
 | `autoscaling.enabled`                             | Enable autoscaling on the deployment |
 | `autoscaling.minReplicas`                         | MinReplicas is the lower limit for the number of replicas to which the autoscaler can scale down |
 | `autoscaling.maxReplicas`                         | Upper limit for the number of pods that can be set by the autoscaler |
-| `autoscaling.targetCPUUtilizationPercentage`      | Target average CPU utilization over all pods |
-| `autoscaling.targetMemoryUtilizationPercentage`   | Target average Memory utilization over all pods |
 | `nodeSelector`                                    | Selector which must match a node's labels for the pod to be scheduled on that node |
 | `tolerations`                                     | Tolerates any taint that matches any listed values |
 | `affinity`                                        | Determines how the pods should be schedule |
@@ -137,8 +132,7 @@ The Helm chart creates the following resources:
 
 ### Requirements
 * Kubernetes version 1.13.0 or later
-* Helm version 3.0.0 or later
-* Service account with permission to install charts onto the cluster
+* Database server
 
 ### Parameters
 
@@ -148,26 +142,14 @@ The Helm chart creates the following resources:
 | `image.repository`                                | Image repository address from which the helm chart will pull the image |
 | `image.pullPolicy`                                | The image PullPolicy affect when the kubelet attempts to pull the specified image |
 | `image.tag`                                       | The tag determines which version of the image to pull |
-| `imagePullSecrets`                                | Secrets to be used to authentication, when pulling down images |
-| `nameOverride`                                    | Overrides the default name for resources |
-| `fullnameOverride`                                | Overrides the default full name (`{release/name}`) for resources |
 | `serviceAccount.annotations`                      | Arbitrary non-identifying metadata |
-| `serviceAccount.name`                             | Identifying name used for the service account |
 | `serviceAccount.rules`                             | List of rules that apply to the service account |
 | `podAnnotations`                                  | Arbitrary non-identifying metadata |
 | `podSecurityContext`                              | Pod-level security attributes and common container settings |
 | `securityContext`                                 | Defines privilege and access control settings for a Pod or Container |
-| `service.type`                                    | How the Service is exposed (ExternalName/ClusterIP/NodePort/LoadBalancer) |
-| `service.port`                                    | Port that traffic should be forwarded onto on the pod/s |
-| `resources.limits.cpu`                            | Maximum amount of compute CPU allowed |
-| `resources.limits.memory`                         | Maximum amount of compute Memory allowed |
-| `resources.requests.cpu`                          | Minimum amount of compute CPU required |
-| `resources.requests.memory`                       | Minimum amount of compute Memory required |
 | `autoscaling.enabled`                             | Enable autoscaling on the deployment |
 | `autoscaling.minReplicas`                         | MinReplicas is the lower limit for the number of replicas to which the autoscaler can scale down |
 | `autoscaling.maxReplicas`                         | Upper limit for the number of pods that can be set by the autoscaler |
-| `autoscaling.targetCPUUtilizationPercentage`      | Target average CPU utilization over all pods |
-| `autoscaling.targetMemoryUtilizationPercentage`   | Target average Memory utilization over all pods |
 | `nodeSelector`                                    | Selector which must match a node's labels for the pod to be scheduled on that node |
 | `tolerations`                                     | Tolerates any taint that matches any listed values |
 | `affinity`                                        | Determines how the pods should be schedule |
@@ -192,8 +174,7 @@ The Helm chart creates the following resources:
 
 ### Requirements
 * Kubernetes version 1.13.0 or later
-* Helm version 3.0.0 or later
-* Service account with permission to install charts onto the cluster
+* Database server
 
 ### Parameters
 
@@ -203,31 +184,14 @@ The Helm chart creates the following resources:
 | `image.repository`                                | Image repository address from which the helm chart will pull the image |
 | `image.pullPolicy`                                | The image PullPolicy affect when the kubelet attempts to pull the specified image |
 | `image.tag`                                       | The tag determines which version of the image to pull |
-| `imagePullSecrets`                                | Secrets to be used to authentication, when pulling down images |
-| `nameOverride`                                    | Overrides the default name for resources |
-| `fullnameOverride`                                | Overrides the default full name (`{release/name}`) for resources |
 | `serviceAccount.annotations`                      | Arbitrary non-identifying metadata |
-| `serviceAccount.name`                             | Identifying name used for the service account |
 | `serviceAccount.rules`                             | List of rules that apply to the service account |
 | `podAnnotations`                                  | Arbitrary non-identifying metadata |
 | `podSecurityContext`                              | Pod-level security attributes and common container settings |
 | `securityContext`                                 | Defines privilege and access control settings for a Pod or Container |
-| `service.type`                                    | How the Service is exposed (ExternalName/ClusterIP/NodePort/LoadBalancer) |
-| `service.port`                                    | Port that traffic should be forwarded onto on the pod/s |
-| `ingress.enabled`                                 | If enabled, creates the Ingress/Route definition |
-| `ingress.host`                                    | Ingress/Route hostname/ip to process the incoming http traffic |
-| `ingress.annotations`                             | Arbitrary non-identifying metadata |
-| `ingress.tls.enabled`                             | Enable TLS for the service, to force HTTPS |
-| `ingress.tls.secretName`                          | Name of the K8s Secret that contains the TLS certificate |
-| `resources.limits.cpu`                            | Maximum amount of compute CPU allowed |
-| `resources.limits.memory`                         | Maximum amount of compute Memory allowed |
-| `resources.requests.cpu`                          | Minimum amount of compute CPU required |
-| `resources.requests.memory`                       | Minimum amount of compute Memory required |
 | `autoscaling.enabled`                             | Enable autoscaling on the deployment |
 | `autoscaling.minReplicas`                         | MinReplicas is the lower limit for the number of replicas to which the autoscaler can scale down |
 | `autoscaling.maxReplicas`                         | Upper limit for the number of pods that can be set by the autoscaler |
-| `autoscaling.targetCPUUtilizationPercentage`      | Target average CPU utilization over all pods |
-| `autoscaling.targetMemoryUtilizationPercentage`   | Target average Memory utilization over all pods |
 | `nodeSelector`                                    | Selector which must match a node's labels for the pod to be scheduled on that node |
 | `tolerations`                                     | Tolerates any taint that matches any listed values |
 | `affinity`                                        | Determines how the pods should be schedule |
@@ -255,8 +219,7 @@ The Helm chart creates the following resources:
 
 ### Requirements
 * Kubernetes version 1.13.0 or later
-* Helm version 3.0.0 or later
-* Service account with permission to install charts onto the cluster
+* Database server
 
 ### Parameters
 
@@ -266,31 +229,14 @@ The Helm chart creates the following resources:
 | `image.repository`                                | Image repository address from which the helm chart will pull the image |
 | `image.pullPolicy`                                | The image PullPolicy affect when the kubelet attempts to pull the specified image |
 | `image.tag`                                       | The tag determines which version of the image to pull |
-| `imagePullSecrets`                                | Secrets to be used to authentication, when pulling down images |
-| `nameOverride`                                    | Overrides the default name for resources |
-| `fullnameOverride`                                | Overrides the default full name (`{release/name}`) for resources |
 | `serviceAccount.annotations`                      | Arbitrary non-identifying metadata |
-| `serviceAccount.name`                             | Identifying name used for the service account |
 | `serviceAccount.rules`                             | List of rules that apply to the service account |
 | `podAnnotations`                                  | Arbitrary non-identifying metadata |
 | `podSecurityContext`                              | Pod-level security attributes and common container settings |
 | `securityContext`                                 | Defines privilege and access control settings for a Pod or Container |
-| `service.type`                                    | How the Service is exposed (ExternalName/ClusterIP/NodePort/LoadBalancer) |
-| `service.port`                                    | Port that traffic should be forwarded onto on the pod/s |
-| `ingress.enabled`                                 | If enabled, creates the Ingress/Route definition |
-| `ingress.host`                                    | Ingress/Route hostname/ip to process the incoming http traffic |
-| `ingress.annotations`                             | Arbitrary non-identifying metadata |
-| `ingress.tls.enabled`                             | Enable TLS for the service, to force HTTPS |
-| `ingress.tls.secretName`                          | Name of the K8s Secret that contains the TLS certificate |
-| `resources.limits.cpu`                            | Maximum amount of compute CPU allowed |
-| `resources.limits.memory`                         | Maximum amount of compute Memory allowed |
-| `resources.requests.cpu`                          | Minimum amount of compute CPU required |
-| `resources.requests.memory`                       | Minimum amount of compute Memory required |
 | `autoscaling.enabled`                             | Enable autoscaling on the deployment |
 | `autoscaling.minReplicas`                         | MinReplicas is the lower limit for the number of replicas to which the autoscaler can scale down |
 | `autoscaling.maxReplicas`                         | Upper limit for the number of pods that can be set by the autoscaler |
-| `autoscaling.targetCPUUtilizationPercentage`      | Target average CPU utilization over all pods |
-| `autoscaling.targetMemoryUtilizationPercentage`   | Target average Memory utilization over all pods |
 | `nodeSelector`                                    | Selector which must match a node's labels for the pod to be scheduled on that node |
 | `tolerations`                                     | Tolerates any taint that matches any listed values |
 | `affinity`                                        | Determines how the pods should be schedule |
@@ -316,11 +262,8 @@ The Helm chart creates the following resources:
 
 ### Requirements
 * Kubernetes version 1.13.0 or later
-* Helm version 3.0.0 or later
-* Service account with permission to install charts onto the cluster
 
 ### Parameters
-
 
 | Parameter                                         | Description                                |
 | ------------------------------------------------- | ------------------------------------------ |
@@ -328,31 +271,14 @@ The Helm chart creates the following resources:
 | `image.repository`                                | Image repository address from which the helm chart will pull the image |
 | `image.pullPolicy`                                | The image PullPolicy affect when the kubelet attempts to pull the specified image |
 | `image.tag`                                       | The tag determines which version of the image to pull |
-| `imagePullSecrets`                                | Secrets to be used to authentication, when pulling down images |
-| `nameOverride`                                    | Overrides the default name for resources |
-| `fullnameOverride`                                | Overrides the default full name (`{release/name}`) for resources |
 | `serviceAccount.annotations`                      | Arbitrary non-identifying metadata |
-| `serviceAccount.name`                             | Identifying name used for the service account |
 | `serviceAccount.rules`                             | List of rules that apply to the service account |
 | `podAnnotations`                                  | Arbitrary non-identifying metadata |
 | `podSecurityContext`                              | Pod-level security attributes and common container settings |
 | `securityContext`                                 | Defines privilege and access control settings for a Pod or Container |
-| `service.type`                                    | How the Service is exposed (ExternalName/ClusterIP/NodePort/LoadBalancer) |
-| `service.port`                                    | Port that traffic should be forwarded onto on the pod/s |
-| `ingress.enabled`                                 | If enabled, creates the Ingress/Route definition |
-| `ingress.host`                                    | Ingress/Route hostname/ip to process the incoming http traffic |
-| `ingress.annotations`                             | Arbitrary non-identifying metadata |
-| `ingress.tls.enabled`                             | Enable TLS for the service, to force HTTPS |
-| `ingress.tls.secretName`                          | Name of the K8s Secret that contains the TLS certificate |
-| `resources.limits.cpu`                            | Maximum amount of compute CPU allowed |
-| `resources.limits.memory`                         | Maximum amount of compute Memory allowed |
-| `resources.requests.cpu`                          | Minimum amount of compute CPU required |
-| `resources.requests.memory`                       | Minimum amount of compute Memory required |
 | `autoscaling.enabled`                             | Enable autoscaling on the deployment |
 | `autoscaling.minReplicas`                         | MinReplicas is the lower limit for the number of replicas to which the autoscaler can scale down |
 | `autoscaling.maxReplicas`                         | Upper limit for the number of pods that can be set by the autoscaler |
-| `autoscaling.targetCPUUtilizationPercentage`      | Target average CPU utilization over all pods |
-| `autoscaling.targetMemoryUtilizationPercentage`   | Target average Memory utilization over all pods |
 | `nodeSelector`                                    | Selector which must match a node's labels for the pod to be scheduled on that node |
 | `tolerations`                                     | Tolerates any taint that matches any listed values |
 | `affinity`                                        | Determines how the pods should be schedule |

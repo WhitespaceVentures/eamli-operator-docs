@@ -11,7 +11,7 @@ The eamli operator provides a single interface for managing all the services tha
 * Red Hat OpenShift Container Platform 4.6 or newer installed on x86_64
 * A user with cluster administrator role
 * No storage is required to install the operator
-* A PostgreSQL instance, reachable from within the cluster. For details on setting up a basic PostgreSQL instance see [here](https://whitespaceventures.github.io/eamli-operator-docs/Postgresql.md)
+* A PostgreSQL instance, reachable from within the cluster. For details on setting up a basic PostgreSQL instance see [here](https://whitespaceventures.github.io/eamli-operator-docs/Postgresql.html)
 * A PostgreSQL secret, with the admin user details
 ```
 $ oc -n eamli create secret generic postgresql-admin \

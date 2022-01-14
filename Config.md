@@ -51,6 +51,9 @@ The Helm chart creates the following resources:
 * Kubernetes version 1.13.0 or later
 * Database server
 
+### Required Resources
+The operator requires 400m CPU and 128Mi memory.
+
 ### Parameters
 
 | Parameter                                         | Description                                |
@@ -96,6 +99,9 @@ The Helm chart creates the following resources:
 * Kubernetes version 1.13.0 or later
 * Database server
 
+### Required Resources
+The operator requires 200m CPU and 256Mi memory.
+
 ### Parameters
 
 | Parameter                                         | Description                                |
@@ -133,6 +139,9 @@ The Helm chart creates the following resources:
 ### Requirements
 * Kubernetes version 1.13.0 or later
 * Database server
+
+### Required Resources
+The operator requires 200m CPU and 256Mi memory.
 
 ### Parameters
 
@@ -175,6 +184,9 @@ The Helm chart creates the following resources:
 ### Requirements
 * Kubernetes version 1.13.0 or later
 * Database server
+
+### Required Resources
+The operator requires 200m CPU and 256Mi memory.
 
 ### Parameters
 
@@ -221,6 +233,9 @@ The Helm chart creates the following resources:
 * Kubernetes version 1.13.0 or later
 * Database server
 
+### Required Resources
+The operator requires 100m CPU and 128Mi memory.
+
 ### Parameters
 
 | Parameter                                         | Description                                |
@@ -262,6 +277,9 @@ The Helm chart creates the following resources:
 
 ### Requirements
 * Kubernetes version 1.13.0 or later
+
+### Required Resources
+The operator requires 100m CPU and 64Mi memory.
 
 ### Parameters
 

@@ -22,7 +22,7 @@ $ oc -n eamli create secret generic postgresql-admin \
 * Keycloak Operator installed within the eamli target namespace, with a custom route defined. For details on setup see [here](https://whitespaceventures.github.io/eamli-operator-docs/Keycloak.html)
 * An image pull secret, using your unique eamli details
 ```
-kubectl create -n eamli secret docker-registry eamli-auth \
+$ oc -n eamli create secret docker-registry eamli-auth \
     --docker-server=registry.gitlab.com \
     --docker-username="jobbloggs" \
     --docker-password="MY_SUPER_SECRET_API_KEY" \

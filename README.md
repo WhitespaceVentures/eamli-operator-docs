@@ -30,13 +30,15 @@ For the minimum requirements for services, see the [service configuration](https
 Check out the [quick start guide](https://eamli.com/quickstart), for getting the eamli operator up and running
 
 ## Configuration
-For full configuration options, see  https://eamli.com/config
+For full configuration options, see the [configuration guide](https://eamli.com/config)
 
 ## Limitations
 Only `x86-64` platforms are supported by this operator.
 
 ## SecurityContextConstraints Requirements
 The `restricted` security context constraint (SCC) is used for the operator.
+
+You can also apply the [eamli SCC](https://whitespaceventures.github.io/eamli-operator-docs/SCC.html), to limit the permissions applied to eamli resources
 
 ## Quick start
 To get started with the eamli operator check out the [Quickstart guide](/QuickStart.md) (Openshift)

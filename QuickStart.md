@@ -192,7 +192,7 @@ Once you have installed the Eamli stack, you should be able to head over to http
 
 You can log in, using the default creditials
 
-    U: durden-admin
+    U: eamli-admin
     P: password
 
 You will then be prompted to change the password. It will need to contain, a lowercase, uppercase, numeric and special characters.

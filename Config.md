@@ -17,6 +17,7 @@
 | `webapp`          | [webapp][9]           | N        | `{}`             | API definition, for controlling the Eamli Web App within the cluster |
 
 ### EamliAPIServer
+
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                               | N        | `1`              | Number of pods to create for this deployment |
@@ -29,17 +30,20 @@
 | `environment`             | [eamli-api-server-environment][3]     | N        | `{}`             | Defines the environment variables that are exposed to the service |
 
 ### EamliAPIServerEnvironment
+
 | Parameter         | Type                      | Required | Default          | Description |
 | ----------------- | ------------------------- | -------- | ---------------- | ----------- |
 | `gunicorn`        | [gunicorn][11]            | N        | `{}`             | Collection of Gunicorn settings that are exposed for tweaking service runtimes |
 | `seeder`          | [api-server-seeder][4]    | N        | `1`              | Configuration of how the API Server data is seeded |
 
 ### EamliAPIServerSeeder
+
 | Parameter         | Type                  | Required | Default          | Description |
 | ----------------- | --------------------- | -------- | ---------------- | ----------- |
 | `demo`            | Boolean               | N        | `false`          | If set to true, demo data will be loaded onto the platform. |
 
 ### EamliProductServer
+
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                               | N        | `1`              | Number of pods to create for this deployment |
@@ -52,12 +56,14 @@
 | `environment`             | [eamli-product-server-environment][6] | N        | `{}`             | Defines the environment variables that are exposed to the service |
 
 ### EamliProductServerEnvironment
+
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `gunicorn`                | [gunicorn][11]                        | N        | `{}`             | Collection of Gunicorn settings that are exposed for tweaking service runtimes |
 | `corsAllowedOrigin`       | String                                | N        | `*`              | The Access-Control-Allow-Origin response header indicates whether the response can be shared with requesting code from the given origin |
 
 ### EamliSourceData
+
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                               | N        | `1`              | Number of pods to create for this deployment |
@@ -70,12 +76,14 @@
 | `environment`             | [eamli-source-data-environment][8]    | N        | `{}`             | Defines the environment variables that are exposed to the service |
 
 ### EamliSourceDataEnvironment
+
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `gunicorn`                | [gunicorn][11]                        | N        | `{}`             | Collection of Gunicorn settings that are exposed for tweaking service runtimes |
 | `corsAllowedOrigin`       | String                                | N        | `*`              | The Access-Control-Allow-Origin response header indicates whether the response can be shared with requesting code from the given origin |
 
 ### EamliWebApp
+
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                               | N        | `1`              | Number of pods to create for this deployment |
@@ -87,6 +95,7 @@
 | `tolerations`             | [tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
 
 ### Elasticsearch
+
 | Parameter         | Type                  | Required | Default        | Description |
 | ----------------- | --------------------- | -------- | -------------- | ----------- |
 | `scheme`          | String                | N        | `"http"`       | The protocol used to communicate with the Elasticsearch instance |
@@ -95,6 +104,7 @@
 | `customCA`        | Boolean               | N        | `false`        | Where or not to use custom certificates to communicate with Elasticsearch. If set to true, expects a secret named `elasticseach-https-secret` within the same namespace as the eamli operator, containing the custom PEM file (See the [Prerequisites section](https://whitespaceventures.github.io/eamli-operator-docs/#Prerequisites)) |
 
 ### Gunicorn
+
 | Parameter                 | Type                                  | Required | Default            | Description |
 | ------------------------- | ------------------------------------- | -------- | ------------------ | ----------- |
 | `jsonLogging`             | Boolean                               | N        | `false`            | Enable to set logs to print in JSON format |
@@ -104,18 +114,21 @@
 | `timeout`                 | String                                | N        | `""`               | Workers silent for more than this many seconds are killed and restarted |
 
 ### HorizontalPodAutoscaler
+
 | Parameter     | Type                                  | Required | Default          | Description |
 | ------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `enabled`     | boolean                               | N        | `false`          | Flag to enable autoscaling of the service pods |
 | `spec`        | [horizontal-pod-autoscaler-spec][21]  | N        | `""`             | See https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ |
 
 ### Image
+
 | Parameter                 | Type                      | Required | Default          | Description |
 | ------------------------- | ------------------------- | -------- | ---------------- | ----------- |
 | `repository`              | String                    | N        | `""`             | Container image source |
 | `tag`                     | String                    | N        | `""`             | Tag of the container image |
 
 ### Ingress
+
 | Parameter         | Type                  | Required | Default          | Description |
 | ----------------- | --------------------- | -------- | ---------------- | ----------- |
 | `host`            | String                | Y        | `""`             | Ingress/Route hostname/ip to process the incoming http traffic |
@@ -123,12 +136,14 @@
 | `tls`             | [ingress-tls][15]     | N        | `{}`             | TLS details for securing traffic to the cluster |
 
 ### IngressTLS
+
 | Parameter         | Type                  | Required | Default          | Description |
 | ----------------- | --------------------- | -------- | ---------------- | ----------- |
 | `hosts`           | List                  | N        | `[]`             | List of host names that match the TLS certificate |
 | `secretName`      | String                | N        | `""`             | Name of the kubernetes secret that contains the TLS certificate. The secret needs to be within the same namespace as the eamli operator |
 
 ### Keycloak
+
 | Parameter                 | Type                  | Required | Default    | Description |
 | ------------------------- | --------------------- | -------- | ---------- | ----------- |
 | `host`                    | String                | Y        | `""`       | Public endpoint that the keycloak instance is available from |
@@ -138,17 +153,20 @@
 | `adminSecretPasswordKey`  | String                | Y        | `""`       | Key within the secret that contains the keycloak admin password |
 
 ### License
+
 | Parameter         | Type                  | Required | Default          | Description |
 | ----------------- | --------------------- | -------- | ---------------- | ----------- |
 | `accept`          | Boolean               | Y        | `false`          | Flag, to confirm you accept the eamli [EULA](https://eamli.com/eula) |
 
 ### NodeSelector
+
 | Parameter     | Type                              | Required | Default          | Description |
 | ------------- | --------------------------------- | -------- | ---------------- | ----------- |
 | `enabled`     | boolean                           | N        | `false`          | Flag to enable node selector for the service pods |
 | `spec`        | [node-selector-spec][22]          | N        | `""`             | See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector |
 
 ### Postgresql
+
 | Parameter             | Type                  | Required | Default    | Description |
 | --------------------- | --------------------- | -------- | ---------- | ----------- |
 | `internalServiceAddr` | String                | N        | `""`       | Address of a PostgreSQL instance that is within the cluster. For example postgres.svc.{NS}.cluster.internal |
@@ -159,6 +177,7 @@
 | `adminDB`             | String                | Y        | `""`       | Default PostgreSQL database |
 
 ### Tolerations
+
 | Parameter     | Type                              | Required | Default          | Description |
 | ------------- | --------------------------------- | -------- | ---------------- | ----------- |
 | `enabled`     | boolean                           | N        | `false`          | Flag to enable tolerations for the service pods |

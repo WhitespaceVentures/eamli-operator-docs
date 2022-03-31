@@ -3,6 +3,7 @@
 ## API Reference
 
 ### Eamli
+
 | Parameter         | Type                  | Required | Default          | Description |
 | ----------------- | --------------------- | -------- | ---------------- | ----------- |
 | `license`         | [license][17]         | Y        | `{}`             | Provides a section for accepting the eamli licensing agreement |

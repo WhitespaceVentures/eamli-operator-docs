@@ -4,37 +4,37 @@
 
 ### Eamli
 
-| Parameter         | Type                  | Required | Default          | Description |
-| ----------------- | --------------------- | -------- | ---------------- | ----------- |
-| `license`         | [license][17]         | Y        | `{}`             | Provides a section for accepting the eamli licensing agreement |
-| `ingress`         | [ingress][14]         | Y        | `{}`             | Defines how eamli is exposed to public traffic |
-| `keycloak`        | [keycloak][16]        | Y        | `{}`             | Defines how the eamli services will interact with the [Keycloak](https://www.keycloak.org/) instance |
-| `postgresql`      | [postgresql][19]      | Y        | `{}`             | Defines how the eamli services will interact with the [PostgreSQL](https://www.postgresql.org/) instance |
-| `elasticsearch`   | [elasticsearch][10]   | Y        | `{}`             | Defines how the eamli services will interact with the [Elasticsearch](https://www.elastic.co/) instance |
-| `apiserver`       | [apiserver][2]        | N        | `{}`             | API definition, for controlling the Eamli API Server within the cluster |
-| `productserver`   | [productserver][5]    | N        | `{}`             | API definition, for controlling the Eamli Product Server within the cluster |
-| `sourcedata`      | [sourcedata][7]       | N        | `{}`             | API definition, for controlling the Eamli Source Data within the cluster |
-| `webapp`          | [webapp][9]           | N        | `{}`             | API definition, for controlling the Eamli Web App within the cluster |
+| Parameter         | Type                      | Required | Default          | Description |
+| ----------------- | ------------------------- | -------- | ---------------- | ----------- |
+| `license`         | [License][17]             | Y        | `{}`             | Provides a section for accepting the eamli licensing agreement |
+| `ingress`         | [Ingress][14]             | Y        | `{}`             | Defines how eamli is exposed to public traffic |
+| `keycloak`        | [Keycloak][16]            | Y        | `{}`             | Defines how the eamli services will interact with the [Keycloak](https://www.keycloak.org/) instance |
+| `postgresql`      | [PostgreSQL][19]          | Y        | `{}`             | Defines how the eamli services will interact with the [PostgreSQL](https://www.postgresql.org/) instance |
+| `elasticsearch`   | [Elasticsearch][10]       | Y        | `{}`             | Defines how the eamli services will interact with the [Elasticsearch](https://www.elastic.co/) instance |
+| `apiserver`       | [EamliAPIServer][2]       | N        | `{}`             | API definition, for controlling the Eamli API Server within the cluster |
+| `productserver`   | [EamliProductServer][5]   | N        | `{}`             | API definition, for controlling the Eamli Product Server within the cluster |
+| `sourcedata`      | [EamliSourceData][7]      | N        | `{}`             | API definition, for controlling the Eamli Source Data within the cluster |
+| `webapp`          | [EamliWebApp][9]          | N        | `{}`             | API definition, for controlling the Eamli Web App within the cluster |
 
 ### EamliAPIServer
 
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
-| `replicaCount`            | Integer                               | N        | `1`              | Number of pods to create for this deployment |
-| `image`                   | [image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
-| `podAnnotations`          | [pod-annotations][25]                 | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
-| `horizontalpodautoscaler` | [horizontal-pod-autoscaler][12]       | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
-| `resources`               | [resource-requirements][23]           | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
-| `nodeSelector`            | [node-selector][18]                   | N        | `{}`             | The simplest recommended form of node selection constraint. |
-| `tolerations`             | [tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
-| `environment`             | [eamli-api-server-environment][3]     | N        | `{}`             | Defines the environment variables that are exposed to the service |
+| `replicaCount`            | Integer                           | N        | `1`              | Number of pods to create for this deployment |
+| `image`                   | [Image][13]                       | N        | `{}`             | Defines the container image to be used for this service |
+| `podAnnotations`          | [PodAnnotations][25]              | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
+| `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]     | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
+| `resources`               | [ResourceRequirements][23]        | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| `nodeSelector`            | [NodeSelector][18]                | N        | `{}`             | The simplest recommended form of node selection constraint. |
+| `tolerations`             | [Tolerations][20]                 | N        | `{}`             | Define how pods should be scheduled for this service. |
+| `environment`             | [EamliAPIServerEnvironment][3]    | N        | `{}`             | Defines the environment variables that are exposed to the service |
 
 ### EamliAPIServerEnvironment
 
 | Parameter         | Type                      | Required | Default          | Description |
 | ----------------- | ------------------------- | -------- | ---------------- | ----------- |
-| `gunicorn`        | [gunicorn][11]            | N        | `{}`             | Collection of Gunicorn settings that are exposed for tweaking service runtimes |
-| `seeder`          | [api-server-seeder][4]    | N        | `1`              | Configuration of how the API Server data is seeded |
+| `gunicorn`        | [Gunicorn][11]            | N        | `{}`             | Collection of Gunicorn settings that are exposed for tweaking service runtimes |
+| `seeder`          | [APIServerSeeder][4]      | N        | `1`              | Configuration of how the API Server data is seeded |
 
 ### EamliAPIServerSeeder
 
@@ -47,19 +47,19 @@
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                               | N        | `1`              | Number of pods to create for this deployment |
-| `image`                   | [image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
-| `podAnnotations`          | [pod-annotations][25]                 | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
-| `horizontalpodautoscaler` | [horizontal-pod-autoscaler][12]       | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
-| `resources`               | [resource-requirements][23]           | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
-| `nodeSelector`            | [node-selector][18]                   | N        | `{}`             | The simplest recommended form of node selection constraint. |
-| `tolerations`             | [tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
-| `environment`             | [eamli-product-server-environment][6] | N        | `{}`             | Defines the environment variables that are exposed to the service |
+| `image`                   | [Image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
+| `podAnnotations`          | [PodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
+| `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]         | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
+| `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| `nodeSelector`            | [NodeSelector][18]                    | N        | `{}`             | The simplest recommended form of node selection constraint. |
+| `tolerations`             | [Tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
+| `environment`             | [EamliProductServerEnvironment][6]    | N        | `{}`             | Defines the environment variables that are exposed to the service |
 
 ### EamliProductServerEnvironment
 
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
-| `gunicorn`                | [gunicorn][11]                        | N        | `{}`             | Collection of Gunicorn settings that are exposed for tweaking service runtimes |
+| `gunicorn`                | [Gunicorn][11]                        | N        | `{}`             | Collection of Gunicorn settings that are exposed for tweaking service runtimes |
 | `corsAllowedOrigin`       | String                                | N        | `*`              | The Access-Control-Allow-Origin response header indicates whether the response can be shared with requesting code from the given origin |
 
 ### EamliSourceData
@@ -67,19 +67,19 @@
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                               | N        | `1`              | Number of pods to create for this deployment |
-| `image`                   | [image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
-| `podAnnotations`          | [pod-annotations][25]                 | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
-| `horizontalpodautoscaler` | [horizontal-pod-autoscaler][12]       | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
-| `resources`               | [resource-requirements][23]           | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
-| `nodeSelector`            | [node-selector][18]                   | N        | `{}`             | The simplest recommended form of node selection constraint. |
-| `tolerations`             | [tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
-| `environment`             | [eamli-source-data-environment][8]    | N        | `{}`             | Defines the environment variables that are exposed to the service |
+| `image`                   | [Image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
+| `podAnnotations`          | [PodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
+| `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]         | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
+| `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| `nodeSelector`            | [NodeSelector][18]                    | N        | `{}`             | The simplest recommended form of node selection constraint. |
+| `tolerations`             | [Tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
+| `environment`             | [EamliSourceDataEnvironment][8]       | N        | `{}`             | Defines the environment variables that are exposed to the service |
 
 ### EamliSourceDataEnvironment
 
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
-| `gunicorn`                | [gunicorn][11]                        | N        | `{}`             | Collection of Gunicorn settings that are exposed for tweaking service runtimes |
+| `gunicorn`                | [Gunicorn][11]                        | N        | `{}`             | Collection of Gunicorn settings that are exposed for tweaking service runtimes |
 | `corsAllowedOrigin`       | String                                | N        | `*`              | The Access-Control-Allow-Origin response header indicates whether the response can be shared with requesting code from the given origin |
 
 ### EamliWebApp
@@ -87,12 +87,12 @@
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                               | N        | `1`              | Number of pods to create for this deployment |
-| `image`                   | [image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
-| `podAnnotations`          | [pod-annotations][25]                 | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
-| `horizontalpodautoscaler` | [horizontal-pod-autoscaler][12]       | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
-| `resources`               | [resource-requirements][23]           | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
-| `nodeSelector`            | [node-selector][18]                   | N        | `{}`             | The simplest recommended form of node selection constraint. |
-| `tolerations`             | [tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
+| `image`                   | [Image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
+| `podAnnotations`          | [AodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
+| `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]         | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
+| `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| `nodeSelector`            | [NodeSelector][18]                    | N        | `{}`             | The simplest recommended form of node selection constraint. |
+| `tolerations`             | [Tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
 
 ### Elasticsearch
 
@@ -118,7 +118,7 @@
 | Parameter     | Type                                  | Required | Default          | Description |
 | ------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `enabled`     | boolean                               | N        | `false`          | Flag to enable autoscaling of the service pods |
-| `spec`        | [horizontal-pod-autoscaler-spec][21]  | N        | `""`             | See https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ |
+| `spec`        | [HorizontalPodAutoscalerSpec][21]     | N        | `""`             | See https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ |
 
 ### Image
 
@@ -132,8 +132,8 @@
 | Parameter         | Type                  | Required | Default          | Description |
 | ----------------- | --------------------- | -------- | ---------------- | ----------- |
 | `host`            | String                | Y        | `""`             | Ingress/Route hostname/ip to process the incoming http traffic |
-| `annotations`     | [annotations][25]     | N        | `{}`             | Arbitrary non-identifying metadata |
-| `tls`             | [ingress-tls][15]     | N        | `{}`             | TLS details for securing traffic to the cluster |
+| `annotations`     | [Annotations][25]     | N        | `{}`             | Arbitrary non-identifying metadata |
+| `tls`             | [IngressTLS][15]      | N        | `{}`             | TLS details for securing traffic to the cluster |
 
 ### IngressTLS
 
@@ -163,9 +163,9 @@
 | Parameter     | Type                              | Required | Default          | Description |
 | ------------- | --------------------------------- | -------- | ---------------- | ----------- |
 | `enabled`     | boolean                           | N        | `false`          | Flag to enable node selector for the service pods |
-| `spec`        | [node-selector-spec][22]          | N        | `""`             | See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector |
+| `spec`        | [NodeSelectorSpec][22]            | N        | `""`             | See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector |
 
-### Postgresql
+### PostgreSQL
 
 | Parameter             | Type                  | Required | Default    | Description |
 | --------------------- | --------------------- | -------- | ---------- | ----------- |
@@ -181,29 +181,29 @@
 | Parameter     | Type                              | Required | Default          | Description |
 | ------------- | --------------------------------- | -------- | ---------------- | ----------- |
 | `enabled`     | boolean                           | N        | `false`          | Flag to enable tolerations for the service pods |
-| `spec`        | [toleration-spec][24]             | N        | `{}`             | See https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/ |
+| `spec`        | [TolerationSpec][24]              | N        | `{}`             | See https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/ |
 
 
-[1]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#Eamli> "Eamli"
-[2]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#EamliAPIServer> "EamliAPIServer"
-[3]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#EamliAPIServerEnvironment> "EamliAPIServerEnvironment"
-[4]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#EamliAPIServerSeeder> "EamliAPIServerSeeder"
-[5]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#EamliProductServer> "EamliProductServer"
-[6]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#EamliProductServerEnvironment> "EamliProductServerEnvironment"
-[7]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#EamliSourceData> "EamliSourceData"
-[8]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#EamliSourceDataEnvironment> "EamliSourceDataEnvironment"
-[9]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#EamliWebApp> "EamliWebApp"
-[10]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#Elasticsearch> "Elasticsearch"
-[11]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#Gunicorn> "Gunicorn"
-[12]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#HorizontalPodAutoscaler> "HorizontalPodAutoscaler"
-[13]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#Image> "Image"
-[14]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#Ingress> "Ingress"
-[15]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#IngressTLS> "IngressTLS"
-[16]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#Keycloak> "Keycloak"
-[17]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#License> "License"
-[18]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#NodeSelector> "NodeSelector"
-[19]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#Postgresql> "Postgresql"
-[20]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#Tolerations> "Tolerations"
+[1]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamli> "Eamli"
+[2]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamliapiserver> "EamliAPIServer"
+[3]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamliapiserverenvironment> "EamliAPIServerEnvironment"
+[4]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamliapiserverseeder> "EamliAPIServerSeeder"
+[5]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamliproductserver> "EamliProductServer"
+[6]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamliproductserverenvironment> "EamliProductServerEnvironment"
+[7]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamlisourcedata> "EamliSourceData"
+[8]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamlisourcedataenvironment> "EamliSourceDataEnvironment"
+[9]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamliwebapp> "EamliWebApp"
+[10]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#elasticsearch> "Elasticsearch"
+[11]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#gunicorn> "Gunicorn"
+[12]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#horizontalpodautoscaler> "HorizontalPodAutoscaler"
+[13]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#image> "Image"
+[14]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#ingress> "Ingress"
+[15]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#ingresstls> "IngressTLS"
+[16]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#keycloak> "Keycloak"
+[17]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#license> "License"
+[18]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#nodeselector> "NodeSelector"
+[19]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#postgresql> "Postgresql"
+[20]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#tolerations> "Tolerations"
 [21]: <https://pkg.go.dev/k8s.io/api/autoscaling/v1#HorizontalPodAutoscalerSpec> "HorizontalPodAutoscalerSpec"
 [22]: <https://pkg.go.dev/k8s.io/api@v0.23.4/core/v1#NodeSelectorTerm> "NodeSelectorTerm"
 [23]: <https://pkg.go.dev/k8s.io/api@v0.23.4/core/v1#ResourceRequirements> "ResourceRequirements"

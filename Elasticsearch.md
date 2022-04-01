@@ -2,7 +2,7 @@
 Elasticsearch is used to store models definitions created by eamli.
 
 ## Elasticsearch operator
-Elasticsearch provides an operator that you can install from the operator marketplace via the Openshift dashboard (See https://operatorhub.io/operator/elastic-cloud-eck)
+Elasticsearch provides an operator that you can install from the operator marketplace via the Openshift dashboard (See [https://operatorhub.io/operator/elastic-cloud-eck](https://operatorhub.io/operator/elastic-cloud-eck))
 For the purpose of the quickstart guide, we will spin up a minimal, single node, Elasticsearch instance within the same kubernetes cluster as the eamli operator (In production environments, you would want at minimum of 2 nodes, and potentionally install the operator within its own namespace).
 
 Start by goin to your Openshift "Administrator" dashboard, and navigate to Operators -> OperatorHub.

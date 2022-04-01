@@ -22,9 +22,9 @@
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                           | N        | `1`              | Number of pods to create for this deployment |
 | `image`                   | [Image][13]                       | N        | `{}`             | Defines the container image to be used for this service |
-| `podAnnotations`          | [PodAnnotations][25]              | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
+| `podAnnotations`          | [PodAnnotations][25]              | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
 | `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]     | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
-| `resources`               | [ResourceRequirements][23]        | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| `resources`               | [ResourceRequirements][23]        | N        | `{}`             | Specify how much of each resource a container needs. See [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
 | `nodeSelector`            | [NodeSelector][18]                | N        | `{}`             | The simplest recommended form of node selection constraint. |
 | `tolerations`             | [Tolerations][20]                 | N        | `{}`             | Define how pods should be scheduled for this service. |
 | `environment`             | [EamliAPIServerEnvironment][3]    | N        | `{}`             | Defines the environment variables that are exposed to the service |
@@ -48,9 +48,9 @@
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                               | N        | `1`              | Number of pods to create for this deployment |
 | `image`                   | [Image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
-| `podAnnotations`          | [PodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
+| `podAnnotations`          | [PodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
 | `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]         | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
-| `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
 | `nodeSelector`            | [NodeSelector][18]                    | N        | `{}`             | The simplest recommended form of node selection constraint. |
 | `tolerations`             | [Tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
 | `environment`             | [EamliProductServerEnvironment][6]    | N        | `{}`             | Defines the environment variables that are exposed to the service |
@@ -68,9 +68,9 @@
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                               | N        | `1`              | Number of pods to create for this deployment |
 | `image`                   | [Image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
-| `podAnnotations`          | [PodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
+| `podAnnotations`          | [PodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
 | `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]         | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
-| `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
 | `nodeSelector`            | [NodeSelector][18]                    | N        | `{}`             | The simplest recommended form of node selection constraint. |
 | `tolerations`             | [Tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
 | `environment`             | [EamliSourceDataEnvironment][8]       | N        | `{}`             | Defines the environment variables that are exposed to the service |
@@ -88,9 +88,9 @@
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                               | N        | `1`              | Number of pods to create for this deployment |
 | `image`                   | [Image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
-| `podAnnotations`          | [AodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/ |
+| `podAnnotations`          | [AodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
 | `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]         | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
-| `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/ |
+| `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
 | `nodeSelector`            | [NodeSelector][18]                    | N        | `{}`             | The simplest recommended form of node selection constraint. |
 | `tolerations`             | [Tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
 
@@ -118,7 +118,7 @@
 | Parameter     | Type                                  | Required | Default          | Description |
 | ------------- | ------------------------------------- | -------- | ---------------- | ----------- |
 | `enabled`     | boolean                               | N        | `false`          | Flag to enable autoscaling of the service pods |
-| `spec`        | [HorizontalPodAutoscalerSpec][21]     | N        | `""`             | See https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/ |
+| `spec`        | [HorizontalPodAutoscalerSpec][21]     | N        | `""`             | See [https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) |
 
 ### Image
 
@@ -163,7 +163,7 @@
 | Parameter     | Type                              | Required | Default          | Description |
 | ------------- | --------------------------------- | -------- | ---------------- | ----------- |
 | `enabled`     | boolean                           | N        | `false`          | Flag to enable node selector for the service pods |
-| `spec`        | [NodeSelectorSpec][22]            | N        | `""`             | See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector |
+| `spec`        | [NodeSelectorSpec][22]            | N        | `""`             | See [https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) |
 
 ### PostgreSQL
 
@@ -181,7 +181,7 @@
 | Parameter     | Type                              | Required | Default          | Description |
 | ------------- | --------------------------------- | -------- | ---------------- | ----------- |
 | `enabled`     | boolean                           | N        | `false`          | Flag to enable tolerations for the service pods |
-| `spec`        | [TolerationSpec][24]              | N        | `{}`             | See https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/ |
+| `spec`        | [TolerationSpec][24]              | N        | `{}`             | See [https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) |
 
 
 [1]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamli> "Eamli"

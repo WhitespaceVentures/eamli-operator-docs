@@ -1,44 +1,100 @@
-# Elasticsearch Quick Start
+# Elasticsearch quick start
+Elasticsearch is used to store models definitions created by eamli.
 
-While it is recommended that you configure your Elasticsearch in a highly available and secure fashion. To get you started quickly working with Eamli, you can use this guide for getting a basic Elasticsearch instance setup quickly.
+## Elasticsearch operator
+Elasticsearch provides an operator that you can install from the operator marketplace via the Openshift dashboard (See https://operatorhub.io/operator/elastic-cloud-eck)
+For the purpose of the quickstart guide, we will spin up a minimal, single node, Elasticsearch instance within the same kubernetes cluster as the eamli operator (In production environments, you would want at minimum of 2 nodes, and potentionally install the operator within its own namespace).
 
-We will be using the Elastic's Elasticsearch [Helm chart](https://github.com/elastic/helm-charts/tree/main/elasticsearch) to install an instance onto our cluster, living within the same namespace as our operator.
+Start by goin to your Openshift "Administrator" dashboard, and navigate to Operators -> OperatorHub.
 
-First, add the elastic helm repo to our local registry
+![Admin Console](/imgs/elasticsearch/overview.png)
 
-    $ helm repo add elastic https://helm.elastic.co/
+Using the search box type in "Elasticsearch", select "Elasticsearch (ECK) Operator", and click "Install".
 
-Finally, install the helm chart with:
+![Operator Hub](/imgs/elasticsearch/operatorhub.png)
 
-    $ echo "
-    replicas: 1
-    extraEnvs:
-      - name: discovery.type
-        value: single-node
-      - name: cluster.initial_master_nodes
-        value: null
-    image: registry.connect.redhat.com/elastic/elasticsearch
-    imageTag: 7.15.0
-    securityContext:
-      runAsUser: null
-    podSecurityContext:
-      fsGroup: null
-      runAsUser: null
-    sysctlInitContainer:
-      enabled: false
-    " > es_values.yaml
+Leave all the options as the defaults. This will install the Elasticsearch operator in the "openshift-operators" namespace, and be made available to all namespaces.
 
-    $ helm -n eamli upgrade --install -f es_values.yaml elasticsearch elastic/elasticsearch
+Now in the Elasticsearch (ECK) Operator dashboard, select the "Elasticsearch Cluster" tab, and click "Create Elasticsearch". Select "YAML view" and update the YAML with the following:
+
+![Operator Dashboard](/imgs/elasticsearch/dashboard.png)
+
+    apiVersion: elasticsearch.k8s.elastic.co/v1
+    kind: Elasticsearch
+    metadata:
+      name: elasticsearch
+      namespace: demo
+    spec:
+      version: 8.1.0
+      nodeSets:
+      - name: demo
+        count: 1
+        config:
+          node.roles:
+            - master
+            - data
+          node.store.allow_mmap: false
+        podTemplate:
+          spec:
+            containers:
+              - name: elasticsearch
+                resources:
+                  requests:
+                    memory: 4Gi
+                    cpu: 1
+                  limits:
+                    memory: 4Gi
+                    cpu: 1
 
 After a couple of minutes, you should see the pod and service come up
 
-    $ oc -n eamli get pods
+    $ oc -n demo get pods
     ---
-    NAME                    READY   STATUS      RESTARTS   AGE
-    elasticsearch-master-0  1/1     Running     0          117s
+    NAME                      READY   STATUS    RESTARTS   AGE
+    elasticsearch-es-demo-0   1/1     Running   0          41h
 
-    $ oc -n eamli get service
+    $ oc -n demo get service
     ---
-    NAME                            TYPE        CLUSTER-IP      PORT(S)
-    elasticsearch-master            ClusterIP   172.21.70.98    9200/TCP,9300/TCP
-    elasticsearch-master-headless   ClusterIP   None            9200/TCP,9300/TCP
+    NAME                             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+    elasticsearch-es-demo            ClusterIP   None             <none>        9200/TCP            41h
+    elasticsearch-es-http            ClusterIP   172.21.70.36     <none>        9200/TCP            41h
+    elasticsearch-es-internal-http   ClusterIP   172.21.222.130   <none>        9200/TCP            41h
+    elasticsearch-es-transport       ClusterIP   None             <none>        9300/TCP            41h
+
+    $ oc -n demo get secrets
+    ---
+    NAME                                       TYPE                                  DATA   AGE
+    elasticsearch-es-demo-es-config            Opaque                                1      41h
+    elasticsearch-es-demo-es-transport-certs   Opaque                                3      41h
+    elasticsearch-es-elastic-user              Opaque                                1      41h
+    elasticsearch-es-http-ca-internal          Opaque                                2      41h
+    elasticsearch-es-http-certs-internal       Opaque                                3      41h
+    elasticsearch-es-http-certs-public         Opaque                                2      41h
+    elasticsearch-es-internal-users            Opaque                                3      41h
+    elasticsearch-es-remote-ca                 Opaque                                1      41h
+    elasticsearch-es-transport-ca-internal     Opaque                                2      41h
+    elasticsearch-es-transport-certs-public    Opaque                                1      41h
+    elasticsearch-es-xpack-file-realm          Opaque                                3      41h
+
+## Configuration for eamli
+
+Now that we have an Elasticsearch instance available, we need to expose configuration for the eamli service
+
+### Elasticsearch user credentials
+
+The first thing we will need is the user credentials that will be used to access Elasticsearch. These can be found in the `elasticsearch-es-elastic-user` secret.
+By default, the username will be `elastic`. Using these credentials, we can then create the eamli secret for connecting to Elasticsearch.
+
+    $ PWD=$(oc -n demo get secret elasticsearch-es-elastic-user -o go-template='{{index .data "elastic" | base64decode }}')
+    $ oc kubectl -n demo create secret generic eamli-elastic-creds \
+        --from-literal=ELS_USER="elastic" \
+        --from-literal=ELS_PWD=$PWD
+
+### Elasticsearch TLS certificates
+
+The Elasticsearch instance that was created by the operator will use self signed certificates for handling TLS communication.
+You can find certificate in the `elasticsearch-es-http-certs-public` secret, and then use this certificate to generate to create the PEM file for eamli to use
+
+    $ CERT=$(oc -n demo get secret elasticsearch-es-http-certs-public -o go-template='{{index .data "tls.crt" | base64decode }}')
+    $ oc -n demo create secret generic eamli-elasticsearch-https-secret \
+        --from-literal=ca.pem="${CERT}"

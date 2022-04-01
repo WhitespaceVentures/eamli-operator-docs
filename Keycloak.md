@@ -78,7 +78,7 @@ Using the password, create the eamli secret for connecting to Keycloak.
 
 The Keycloak will be used to allow users to authenticate with eamli, so we need to create a publicily accessable endpoint that they can request.
 
-Use the following snippet to create a new file called, `keycloak-route.yaml`, replacing the values in double brackets (`{{}}`) with your unique values. (eg `spec.host: example.com`)
+Use the following snippet to create a new file called, `keycloak-route.yaml`, replacing the values in brackets (`{}`) with your unique values. (eg `spec.host: example.com`)
 
     apiVersion: route.openshift.io/v1
     kind: Route
@@ -88,7 +88,7 @@ Use the following snippet to create a new file called, `keycloak-route.yaml`, re
       name: keycloak
       namespace: demo
     spec:
-      host: {{YOUR DOMAIN}}
+      host: {YOUR_DOMAIN}
       path: /auth
       port:
         targetPort: keycloak
@@ -100,11 +100,11 @@ Use the following snippet to create a new file called, `keycloak-route.yaml`, re
       tls:
         termination: reencrypt
         key: |-
-          {{YOUR_DOMAIN_TLS_KEY}}
+          {YOUR_DOMAIN_TLS_KEY}
         certificate: |-
-          {{YOUR_DOMAIN_TLS_CERT}}
+          {YOUR_DOMAIN_TLS_CERT}
         caCertificate: |-
-          {{YOUR_DOMAIN_TLS_CA_CERT}}
+          {YOUR_DOMAIN_TLS_CA_CERT}
 
 Save the file, then apply the route to the cluster
 

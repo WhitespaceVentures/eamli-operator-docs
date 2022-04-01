@@ -6,7 +6,7 @@ There is no official PostgreSQL operator, but thankful the guys over at [crunch 
 
 For the purpose of the quickstart guide, we will spin up a minimal, single node, PostgreSQL cluster within the same kubernetes cluster as the eamli operator (In production environments, you would want at minimum of 2 nodes, and potentionally install the operator and PostgreSQL cluster, within its own namespace).
 
-Start by goin to your Openshift "Administrator" dashboard, and navigate to Operators -> OperatorHub.
+Start by going to your Openshift "Administrator" dashboard, and navigate to Operators -> OperatorHub.
 
 ![Admin Console](/imgs/postgresql/overview.png)
 
@@ -104,6 +104,4 @@ Using the password, create the eamli secret for connecting to PostgreSQL.
 
 
 ### PostgreSQL host
-You can also see the host name where the PostgreSQL instance is addressable at within the cluster
-
-    $ oc -n demo get secret postgres-pguser-postgres -o go-template='{{index .data "host" | base64decode }}'
+You can access the PostgreSQL instance within the cluster at `postgres-primary.demo.svc`

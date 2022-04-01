@@ -1,18 +1,28 @@
-# Keycloak Quick Start
+# Keycloak quick start
+Keycloak is used to provide centralised IAM for eamli services.
 
-[Keycloak](https://www.keycloak.org/) can be installed from its own community operator.
+## Keycloak operator
+Keycloak provides an operator that you can install from the operator marketplace via the Openshift dashboard (See (https://www.keycloak.org/getting-started/getting-started-operator-kubernetes)[https://www.keycloak.org/getting-started/getting-started-operator-kubernetes])
 
-From the OpenShift admin console, navigate → Operators → OperatorHub, in the menu on the left side, then, focus on the search input box and type "keycloak". Select "Keycloak Operator provided by Red Hat", and click install.
+Start by going to your Openshift "Administrator" dashboard, and navigate to Operators -> OperatorHub.
 
-You should install keycloak into the same namespace as you intend to install the Eamli opeartor.
+![Admin Console](/imgs/keycloak/overview.png)
 
-Create the keycloak instance:
+Using the search box type in "keycloak", select "Keycloak Operator", and click "Install".
 
-    $ cat <<EOF | oc -n eamli apply -f -
+![Operator Hub](/imgs/keycloak/operatorhub.png)
+
+Select the "demo" for the "Installed Namespace", and leave everything else as default, and click "Install".
+
+Now in the Keycloak Operator dashboard, select the "Keycloak" tab, and click "Create Keycloak". Select "YAML view" and update the YAML with the following:
+
+![Operator Dashboard](/imgs/keycloak/dashboard.png)
+
     apiVersion: keycloak.org/v1alpha1
     kind: Keycloak
     metadata:
-      name: eamli-keycloak
+      name: keycloak
+      namespace: demo
     spec:
       instances: 1
       keycloakDeploymentSpec:
@@ -21,60 +31,84 @@ Create the keycloak instance:
             - "-Dkeycloak.profile.feature.token_exchange=enabled"
             - "-Dkeycloak.profile.feature.admin_fine_grained_authz=enabled"
             - "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING"
-    EOF
 
-And create the route to access the keycloak instance from a public domain. This should be the same domain, as you intend to host the Eamli service.
-For example if you want Eamli to be served at `eamli.mysite.com`, you should set the host to the same value.
+After a couple of minutes, you should see the pod and service come up
 
-    $ cat <<EOF | oc -n eamli apply -f -
+    $ oc -n demo get pods
+    ---
+    NAME                                   READY   STATUS      RESTARTS   AGE
+    keycloak-0                             1/1     Running     2          5m22s
+    keycloak-operator-786bcb4988-grj5g     1/1     Running     0          10m
+    keycloak-postgresql-6db4c69d9f-46kbb   1/1     Running     0          5m22s
+
+    $ oc -n demo get service
+    ---
+    NAME                             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+    keycloak                         ClusterIP   172.21.93.121    <none>        8443/TCP            5m43s
+    keycloak-discovery               ClusterIP   None             <none>        8080/TCP            5m43s
+    keycloak-monitoring              ClusterIP   172.21.194.237   <none>        9990/TCP            5m43s
+    keycloak-operator-metrics        ClusterIP   172.21.18.202    <none>        8383/TCP,8686/TCP   8m59s
+    keycloak-postgresql              ClusterIP   172.21.226.234   <none>        5432/TCP            5m43s
+
+    $ oc -n demo get secrets
+    ---
+    NAME                                       TYPE                                  DATA   AGE
+    credential-keycloak                        Opaque                                2      6m7s
+    keycloak-db-secret                         Opaque                                6      6m7s
+    keycloak-operator-dockercfg-5z2jb          kubernetes.io/dockercfg               1      10m
+    keycloak-operator-token-2bnmx              kubernetes.io/service-account-token   4      10m
+    keycloak-operator-token-vwwbk              kubernetes.io/service-account-token   4      10m
+
+## Configuration for eamli
+
+Now that we have an Keycloak instance available, we need to expose configuration for the eamli service
+
+### Keycloak user credentials
+
+The first thing we will need is the user credentials that will be used to access Keycloak. These can be found in the `credential-keycloak` secret.
+Using the password, create the eamli secret for connecting to Keycloak.
+
+    $ USER=$(oc -n demo get secret credential-keycloak -o go-template='{{index .data "ADMIN_USERNAME" | base64decode }}')
+    $ PWD=$(oc -n demo get secret credential-keycloak -o go-template='{{index .data "ADMIN_PASSWORD" | base64decode }}')
+    $ oc kubectl -n demo create secret generic eamli-keycloak-creds \
+        --from-literal=KEYCLOAK_USER=$USER \
+        --from-literal=KEYCLOAK_PWD=$PWD
+
+### Keycloak route
+
+The Keycloak will be used to allow users to authenticate with eamli, so we need to create a publicily accessable endpoint that they can request.
+
+Use the following snippet to create a new file called, `keycloak-route.yaml`, replacing the values in double brackets (`{{}}`) with your unique values. (eg `spec.host: example.com`)
+
     apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
       annotations:
         haproxy.router.openshift.io/balance: source
-      name: eamli-keycloak
-      namespace: eamli
+      name: keycloak
+      namespace: demo
     spec:
-      host: [YOUR DOMAIN]
+      host: {{YOUR DOMAIN}}
       path: /auth
       port:
         targetPort: keycloak
-      tls:
-        termination: reencrypt
       to:
         kind: Service
         name: keycloak
         weight: 100
       wildcardPolicy: None
-    EOF
+      tls:
+        termination: reencrypt
+        key: |-
+          {{YOUR_DOMAIN_TLS_KEY}}
+        certificate: |-
+          {{YOUR_DOMAIN_TLS_CERT}}
+        caCertificate: |-
+          {{YOUR_DOMAIN_TLS_CA_CERT}}
 
-After a couple of minutes, you should see the pod and service come up
+Save the file, then apply the route to the cluster
 
-    $ oc -n eamli get pods
-    ---
-    NAME                                    READY   STATUS      RESTARTS
-    keycloak-0                              1/1     Running     2
-    keycloak-operator-6478f487f6-clwtw      1/1     Running     0
-    keycloak-postgresql-78d4c4f778-hhr6x    1/1     Running     0
+    $ oc -n demo apply -f keycloak-route.yaml
 
-(You can expect the keycloak pod to be restarted, while waiting for the keycloak-postgresql pod is starting)
-
-    $ oc -n eamli get service
-    ---
-    NAME                        TYPE        CLUSTER-IP      PORT(S)
-    keycloak                    ClusterIP   172.21.23.16    8443/TCP
-    keycloak-discovery          ClusterIP   None            8080/TCP
-    keycloak-monitoring         ClusterIP   172.21.21.158   9990/TCP
-    keycloak-operator-metrics   ClusterIP   172.21.254.94   8383/TCP,8686/TCP
-    keycloak-postgresql         ClusterIP   172.21.11.67    5432/TCP
-
-    $ oc get route -n eamli
-    ---
-    NAME            HOST/PORT     PATH    SERVICES   PORT       TERMINATION   WILDCARD
-    eamli-keycloak  [YOUR DOMAIN] /auth   keycloak   keycloak   reencrypt     None
-
-You should then be able to log into the admin console at: https://[YOUR_DOMAIN]/auth
-
-To see the admin login details, you can run:
-
-    $ oc -n eamli get secret credential-eamli-keycloak
+### Keycloak host
+You can access the Keycloak instance publicly at `https://{YOUR DOMAIN}/auth`

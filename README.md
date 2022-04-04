@@ -11,26 +11,9 @@ The eamli operator provides a single interface for managing all the services tha
 * Red Hat OpenShift Container Platform 4.6 or newer installed on x86_64
 * A user with cluster administrator role
 * No storage is required to install the operator
-* A PostgreSQL instance, reachable from within the cluster. For details on setting up a basic PostgreSQL instance see [here](https://whitespaceventures.github.io/eamli-operator-docs/Postgresql.html)
-* A PostgreSQL secret, with the admin user details
-```
-$ oc -n eamli create secret generic postgresql-admin \
-    --from-literal="postgresql-password=MY_SUPER_SECRET_PWD" \
-    --from-literal="postgresql-postgres-password=MY_SUPER_SECRET_PWD"
-```
-* A Elasticsearch instance, reachable from within the cluster. For details on setuting up a basic Elasticsearch instance see [here](https://whitespaceventures.github.io/eamli-operator-docs/Elasticsearch.html)
-* Keycloak Operator installed within the eamli target namespace, with a custom route defined. For details on setup see [here](https://whitespaceventures.github.io/eamli-operator-docs/Keycloak.html)
-* An image pull secret, using your unique eamli details
-```
-$ oc -n eamli create secret docker-registry eamli-auth \
-    --docker-server=registry.gitlab.com \
-    --docker-username="jobbloggs" \
-    --docker-password="MY_SUPER_SECRET_API_KEY" \
-    --docker-email="jobbloggs@example.com"
-```
 
 ## Resources Required
-The operator requires 200m CPU and 256Mi memory.
+The operator requires 100m CPU and 256Mi memory.
 
 For the minimum requirements for services, see the [service configuration](https://eamli.com/config) documentation
 

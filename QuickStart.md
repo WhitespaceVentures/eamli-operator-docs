@@ -4,17 +4,23 @@
 
 ### Customer details
 
-Before you begin, ensure you have recieved your unique customer details. You will need these to correctly set up your Eamli operator.
-
-If you have not yet recieved your details, please reach out to support@eamli.com
+Before you begin, ensure you have recieved your unique customer details. You will need these to correctly set up your Eamli operator. If you have not yet recieved your details, please reach out to support@eamli.com
 
 ### Public domain name
 
-This can be your own custom domain, or one created by your provider. For example on IBM when you create an openshift cluster, you are given a public domain in the format of `https://cluster-id.region.containers.appdomain.cloud`.
+This is your own public domain, that you will use to serve the eamli platform on (eg `example.com`)
+
+#### TLS certificate
+
+If you want to serve eamli using TLS (`https://`), you will need to create a new TLS secret.
+
+Download your domain TLS certificate and key files, and save them as `tls.cert` and `tls.key`. Then create a new TLS secret with:
+
+    $ oc -n eamli create secret tls eamli-public-tls --cert=tls.cert --key=tls.key
 
 ### Namepsace
 
-You will need to install a Kubernetes Secret, to allow the Eamli manager to pull its docker image.
+Create a new namespace for eamli an its related services to live in.
 
 From the Openshift console (as administrator)
 
@@ -23,58 +29,43 @@ From the Openshift console (as administrator)
   * Name: `eamli`
 * Once complete, click "Create".
 
-### Pull secrets
+Alternatively from the command line:
 
-You will need to install a Kubernetes Secret, to allow the Eamli manager to pull its docker image.
-
-From the Openshift console (as administrator)
-
-* On the sidebar, select Workloads -> Secrets
-* Ensure the "Project", at the top of the secrets dashboard is set to `eamli`
-* From the Secrets dashboard, click on the "Create" in the top right corner, and select "Image pull secret".
-  * Secret name: `gitlab-auth`
-  * Authentication type: `Image registry credentials`
-  * Registry server address: `registry.gitlab.com`
-  * Username: `[ unique customer username ]`
-  * Password: `[ unique customer secret ]`
-  * Eamli: `[ unique customer email ]`
-* Once complete, click "Create".
+     $ oc create ns eamli
 
 ![Create secret](/imgs/eamli-operator/CreateSecret.png)
 
-### Postgresql
+Alternatively from the command line:
 
-Postgresql is required to be setup prior to installing Eamli. If you already have an existing Postgres instance, you can use that. Otherwise, to setup a simple Postgesql instance, see the [Postgresql docs](/Postgresql.md), for getting setup using the community helm chart.
-
-For this guide, we will assume the following:
-
-* A Postgres service called `psql-postgresql-headless` is available in the same namespace as the service being deployed.
-* It has an admin user called `postgres` with a default database named `postgres`
-* A secret has been created named `postgresql-admin`, with the property `postgresql-password` and value of the postgres admin user's password.
-
-If you’re unsure of how to configure any of the above, see the [Postgresql docs](/Postgresql.md).
+    $ oc -n eamli create secret docker-registry eamli-auth \
+        --docker-server=registry.gitlab.com \
+        --docker-username="`[ unique customer username ]`" \
+        --docker-password="`[ unique customer secret ]`" \
+        --docker-email="`[ unique customer email ]`"
 
 ### Elasticsearch
 
-If you have an existing Elasticsearch installation, you can use that. Alternatively, we have provided steps on how to get a basic Elasticsearch up and running within your cluster with a community helm chart. See the [Elasticseasrch docs](/Elasticsearch.md) for details on this.
+To create a new elasticsearch install, we have provided a quick start guide for getting you setup (See the [Elasticseasrch Quickstart](/Elasticsearch.md)).
 
-For this guide, we will assume the following:
+Alternatively, if you already have an Elasticsearch instance available, see [Elasticsearch for eamli](/Postgresql.md#configuration-for-eamli) for configuring eamli to communicate with your instance.
 
-* A Elasticsearch service called `elasticsearch-master-headless` is available in the same namespace as the service being deployed.
-
-If you’re unsure of how to configure any of the above, see the [Elasticsearch docs](/Elasticsearch.md).
+Once setup, you should have a secret created in the `eamli` namespace named `eamli-elasticsearch-auth` with the connection details defined. If Elasticsearch is using its own certificates for TLS, you should also have the `eamli-elasticsearch-tls` secret defined.
 
 ### Keycloak
 
-Eamli requires Keycloak, to handle authentication. If you have an existing Keycloak instance installed, you can update it with the Eamli realms. Alternatively to install a new instance, check out the [Keycloak docs](/Keycloak.md), for getting setup.
+To install a new Keycloak instance, check out the [Keycloak Quickstart](/Keycloak.md), for getting setup.
 
-For this guide, we will assume the following:
+Alternatively, if you already have an existing Keycloak instance available, see [Keycloak for eamli](/Keycloak.md#configuration-for-eamli) for configuring eamli to communicate with your instance.
 
-* A Keycloak service called `keycloak-discovery` is available in the same namespace as the service being deployed.
-* A route exists, and is available at https://[YOUR_DOMAIN]/auth
-* A secret named `keycloak-eamli-config`, with Eamli realm details set.
+Once setup, you should have a secret created in the `eamli` namespace named `eamli-keycloak-auth` with the connection details defined.
 
-If you’re unsure of how to configure any of the above, see the [Keycloak docs](/Keycloak.md).
+### Postgresql
+
+To install a new PostgresSQL instance, check out the [Keycloak Quickstart](/Postgresql.md), for getting setup.
+
+Alternatively, if you already have an existing PostgresSQL instance available, see [PostgresSQL for eamli](/Postgresql.md#configuration-for-eamli) for configuring eamli to communicate with your instance.
+
+Once setup, you should have a secret created in the `eamli` namespace named `eamli-postgresql-auth` with the connection details defined.
 
 ## Operator installation from Red Hat Marketplace
 
@@ -109,80 +100,65 @@ select an option.
 
 ## Application installation
 
-### Licence key
+### Pull secret
 
-When you purchase Eamli, you will receive a welcome email from support@eamli.com, containing your unique customer details. These details are required to start the Eamli service installation.
+You will need to install a Kubernetes Secret, to allow the eamli oeprator to pull down the private images used within the eamli platform.
 
-### Eamli Custom Resources
+From the Openshift console (as administrator)
 
-While the Eamli operator comes bundled with a number of different operands, you will only ever need to interact with the `Stack` operand.
+* On the sidebar, select Workloads -> Secrets
+* Ensure the "Project", at the top of the secrets dashboard is set to `eamli`
+* From the Secrets dashboard, click on the "Create" in the top right corner, and select "Image pull secret".
+  * Secret name: `gitlab-auth`
+  * Authentication type: `Image registry credentials`
+  * Registry server address: `registry.gitlab.com`
+  * Username: `[ unique customer username ]`
+  * Password: `[ unique customer secret ]`
+  * Eamli: `[ unique customer email ]`
+* Once complete, click "Create".
 
-The `Stack` defines the entire Eamli platform, and is used to manage the other Eamli operands available.
+### Creating an eamli instance
 
-### Creating the Eamli Stack
-
-Click on the "Stack" tab, then click "Create Stack"
-
-![Create Stack](/imgs/eamli-operator/CreateStack.png)
-
-Use your unique customer details, to populate the "Client" section, and update all the other sections as required.
+Click on the "Eamli" tab, then click "Create Eamli", and fill out the sections as required.
 
 Alternatively, you can create the stack from your command line with:
 
     $ cat <<EOF | oc -n eamli apply -f -
-    apiVersion: eamli.white.space/v1alpha1
-    kind: Stack
+    apiVersion: eamli.com/v1alpha1
+    kind: Eamli
     metadata:
-      name: eamli-sample
+      name: eamli
     spec:
-      isOpenshift: true
-      client:
-        username: "[ unique customer username ]"
-        secret: "[ unique customer secret ]"
-        email: "[ unique customer email ]"
-      postgresql:
-        host: "psql-postgresql-headless"
-        port: "5432"
-        adminUsername: "postgres"
-        adminDB: "postgres"
+      license:
+        accept: true
       ingress:
-        enabled: true
-        host: "[YOUR DOMAIN]"
-      apiserver:
-        environment:
-          seeder:
-            demoEnabled: true
+        host: `[ public domain name ]`
+        tls:
+          - hosts:
+            - `[ public domain name ]`
+            secretName: eamli-public-tls
     EOF
 
-Replacing the `spec.client` field values with your unique customer details, and updating the `spec.ingress.host` with your domain name
+For full configuration options see the [configuration](/Config.md) document.
 
-For more configuration options see the [config documentation](/Config.md).
-
-Once applied, it will take a couple of minutes for all the Eamli services to be stood up.
+Once applied, it will take a couple of minutes for all the eamli services to be stood up.
 If you have been following everything within this quick start guide, you can click on the Eamli Operator "All Instances" tab within the Openshift console, to see the status of all the services running.
 
 ![StackList](/imgs/eamli-operator/StackList.png)
 
 Alternative, from your console, run `oc -n eamli get pods`, you should see a similiar output as below:
 
-    NAME                                                READY   STATUS      RESTARTS   AGE
-    apiserver-7875d9b6cd-4pn74                          1/1     Running     0          41m
-    apiserver-seeder-ufqxy-p97ll                        0/1     Completed   0          41m
-    coremodelserver-85f8cbfddd-lp95f                    1/1     Running     0          35m
-    coremodelserver-seeder-gwaoi-z27rm                  0/1     Completed   0          35m
-    eamli-operator-controller-manager-79c8b4f69f-csf4r  2/2     Running     0          46m
-    elasticsearch-master-0                              1/1     Running     0          19h
-    executor-bc45ff765-mnv8s                            1/1     Running     0          35m
-    executor-seeder-tjlhg-8wqfn                         0/1     Completed   0          40m
-    keycloak-0                                          1/1     Running     0          14h
-    keycloak-operator-6478f487f6-clwtw                  1/1     Running     0          18h
-    keycloak-postgresql-78d4c4f778-hhr6x                1/1     Running     0          14h
-    productserver-648b578f44-4w4k6                      1/1     Running     0          39m
-    productserver-seeder-qirov-cgjrl                    0/1     Completed   0          39m
-    psql-postgresql-0                                   1/1     Running     0          20h
-    sourcedata-6c6dd75654-4ssrn                         1/1     Running     0          41m
-    sourcedata-seeder-iiibm-ntc7f                       0/1     Completed   0          41m
-    webapp-6c84c9d6c7-r9m5p                             1/1     Running     0          41m
+    NAME                                                              READY   STATUS      RESTARTS   AGE
+    afc56cdfe349220543bd109da2e20ae59ed778a853cb80d953d6499ce64xmdt   0/1     Completed   0          130m
+    eamli-apiserver-6d4d96d57b-vn4wl                                  1/1     Running     0          127m
+    eamli-apiserver-seeder-ctrwm                                      0/1     Completed   0          128m
+    eamli-operator-controller-manager-7c99f78b6f-cw5nb                2/2     Running     0          129m
+    eamli-productserver-6b65ffb989-vj6dp                              1/1     Running     0          126m
+    eamli-productserver-seeder-22r4t                                  0/1     Completed   0          126m
+    eamli-sourcedata-7d7c8ddd59-mbrkr                                 1/1     Running     0          126m
+    eamli-sourcedata-seeder-5zpkl                                     0/1     Completed   0          127m
+    eamli-webapp-946bff9f8-lpjvr                                      1/1     Running     0          128m
+    gitlab-com-whitedotspace-eamli-eamli-operator-bundle-0-12-2       1/1     Running     0          130m
 
 ## Eamli dashboard
 
@@ -197,6 +173,6 @@ You can log in, using the default creditials
 
 You will then be prompted to change the password. It will need to contain, a lowercase, uppercase, numeric and special characters.
 
-Once logged in, you will see the Eamli dashboard, where you can see some key metrics, generated from the demo data.
+Once logged in, you will be greeted with the Eamli dashboard.
 
 ![Home Screen](/imgs/eamli-operator/Homepage.png)

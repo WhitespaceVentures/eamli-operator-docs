@@ -23,11 +23,11 @@ Now in the Elasticsearch (ECK) Operator dashboard, select the "Elasticsearch Clu
     kind: Elasticsearch
     metadata:
       name: elasticsearch
-      namespace: demo
+      namespace: eamli
     spec:
       version: 8.1.0
       nodeSets:
-      - name: demo
+      - name: eamli
         count: 1
         config:
           node.roles:
@@ -48,24 +48,24 @@ Now in the Elasticsearch (ECK) Operator dashboard, select the "Elasticsearch Clu
 
 After a couple of minutes, you should see the pod and service come up
 
-    $ oc -n demo get pods
+    $ oc -n eamli get pods
     ---
     NAME                      READY   STATUS    RESTARTS   AGE
-    elasticsearch-es-demo-0   1/1     Running   0          41h
+    elasticsearch-es-eamli-0  1/1     Running   0          41h
 
-    $ oc -n demo get service
+    $ oc -n eamli get service
     ---
     NAME                             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
-    elasticsearch-es-demo            ClusterIP   None             <none>        9200/TCP            41h
+    elasticsearch-es-eamli           ClusterIP   None             <none>        9200/TCP            41h
     elasticsearch-es-http            ClusterIP   172.21.70.36     <none>        9200/TCP            41h
     elasticsearch-es-internal-http   ClusterIP   172.21.222.130   <none>        9200/TCP            41h
     elasticsearch-es-transport       ClusterIP   None             <none>        9300/TCP            41h
 
-    $ oc -n demo get secrets
+    $ oc -n eamli get secrets
     ---
     NAME                                       TYPE                                  DATA   AGE
-    elasticsearch-es-demo-es-config            Opaque                                1      41h
-    elasticsearch-es-demo-es-transport-certs   Opaque                                3      41h
+    elasticsearch-es-eamli-es-config           Opaque                                1      41h
+    elasticsearch-es-eamli-es-transport-certs  Opaque                                3      41h
     elasticsearch-es-elastic-user              Opaque                                1      41h
     elasticsearch-es-http-ca-internal          Opaque                                2      41h
     elasticsearch-es-http-certs-internal       Opaque                                3      41h
@@ -85,19 +85,23 @@ Now that we have an Elasticsearch instance available, we need to expose configur
 The first thing we will need is the user credentials that will be used to access Elasticsearch. These can be found in the `elasticsearch-es-elastic-user` secret.
 By default, the username will be `elastic`. Using these credentials, we can then create the eamli secret for connecting to Elasticsearch.
 
-    $ PWD=$(oc -n demo get secret elasticsearch-es-elastic-user -o go-template='{{index .data "elastic" | base64decode }}')
-    $ oc kubectl -n demo create secret generic eamli-elastic-creds \
-        --from-literal=ELS_USER="elastic" \
-        --from-literal=ELS_PWD=$PWD
+    $ PWD=$(oc -n eamli get secret elasticsearch-es-elastic-user -o go-template='{{index .data "elastic" | base64decode }}')
+    $ oc kubectl -n eamli create secret generic eamli-elasticsearch-auth \
+        --from-literal=ELS_SCHEME=https \
+        --from-literal=ELS_HOST=elasticsearch-es-http \
+        --from-literal=ELS_PORT=9200 \
+        --from-literal=ELS_USER=elastic \
+        --from-literal=ELS_PWD=$PWD \
+        --from-literal=ELS_CUSTOM_AC=true
 
 ### Elasticsearch TLS certificates
 
 The Elasticsearch instance that was created by the operator will use self signed certificates for handling TLS communication.
 You can find certificate in the `elasticsearch-es-http-certs-public` secret, and then use this certificate to generate to create the PEM file for eamli to use
 
-    $ CERT=$(oc -n demo get secret elasticsearch-es-http-certs-public -o go-template='{{index .data "tls.crt" | base64decode }}')
-    $ oc -n demo create secret generic eamli-elasticsearch-https-secret \
+    $ CERT=$(oc -n eamli get secret elasticsearch-es-http-certs-public -o go-template='{{index .data "tls.crt" | base64decode }}')
+    $ oc -n eamli create secret generic eamli-elasticsearch-tls \
         --from-literal=ca.pem="${CERT}"
 
 ### Elasticsearch host
-You can access the Elasticsearch instance within the cluster at `elasticsearch-es-http.demo.svc`
+You can access the Elasticsearch instance within the cluster at `elasticsearch-es-http.eamli.svc`

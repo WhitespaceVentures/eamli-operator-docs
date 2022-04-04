@@ -12,7 +12,7 @@ Using the search box type in "keycloak", select "Keycloak Operator", and click "
 
 ![Operator Hub](/imgs/keycloak/operatorhub.png)
 
-Select the "demo" for the "Installed Namespace", and leave everything else as default, and click "Install".
+Select "eamli" for the "Installed Namespace", and leave everything else as default, and click "Install".
 
 Now in the Keycloak Operator dashboard, select the "Keycloak" tab, and click "Create Keycloak". Select "YAML view" and update the YAML with the following:
 
@@ -22,7 +22,7 @@ Now in the Keycloak Operator dashboard, select the "Keycloak" tab, and click "Cr
     kind: Keycloak
     metadata:
       name: keycloak
-      namespace: demo
+      namespace: eamli
     spec:
       instances: 1
       keycloakDeploymentSpec:
@@ -34,14 +34,14 @@ Now in the Keycloak Operator dashboard, select the "Keycloak" tab, and click "Cr
 
 After a couple of minutes, you should see the pod and service come up
 
-    $ oc -n demo get pods
+    $ oc -n eamli get pods
     ---
     NAME                                   READY   STATUS      RESTARTS   AGE
     keycloak-0                             1/1     Running     2          5m22s
     keycloak-operator-786bcb4988-grj5g     1/1     Running     0          10m
     keycloak-postgresql-6db4c69d9f-46kbb   1/1     Running     0          5m22s
 
-    $ oc -n demo get service
+    $ oc -n eamli get service
     ---
     NAME                             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
     keycloak                         ClusterIP   172.21.93.121    <none>        8443/TCP            5m43s
@@ -50,7 +50,7 @@ After a couple of minutes, you should see the pod and service come up
     keycloak-operator-metrics        ClusterIP   172.21.18.202    <none>        8383/TCP,8686/TCP   8m59s
     keycloak-postgresql              ClusterIP   172.21.226.234   <none>        5432/TCP            5m43s
 
-    $ oc -n demo get secrets
+    $ oc -n eamli get secrets
     ---
     NAME                                       TYPE                                  DATA   AGE
     credential-keycloak                        Opaque                                2      6m7s
@@ -65,12 +65,14 @@ Now that we have an Keycloak instance available, we need to expose configuration
 
 ### Keycloak user credentials
 
-The first thing we will need is the user credentials that will be used to access Keycloak. These can be found in the `credential-keycloak` secret.
-Using the password, create the eamli secret for connecting to Keycloak.
+Eamli requires the user credentials that will be used to access Keycloak. These can be found in the `credential-eamli-keycloak` secret.
+Using these credentials, we can then create the eamli secret for connecting to Keycloak. (By default Keycloak creates the `master` realm)
 
-    $ USER=$(oc -n demo get secret credential-keycloak -o go-template='{{index .data "ADMIN_USERNAME" | base64decode }}')
-    $ PWD=$(oc -n demo get secret credential-keycloak -o go-template='{{index .data "ADMIN_PASSWORD" | base64decode }}')
-    $ oc kubectl -n demo create secret generic eamli-keycloak-creds \
+    $ USER=$(oc -n eamli get secret credential-eamli-keycloak -o go-template='{{index .data "ADMIN_USERNAME" | base64decode }}')
+    $ PWD=$(oc -n eamli get secret credential-eamli-keycloak -o go-template='{{index .data "ADMIN_PASSWORD" | base64decode }}')
+    $ oc kubectl -n eamli create secret generic eamli-keycloak-auth \
+        --from-literal=KEYCLOAK_URL={YOUR_DOMAIN} \
+        --from-literal=KEYCLOAK_REALM=master \
         --from-literal=KEYCLOAK_USER=$USER \
         --from-literal=KEYCLOAK_PWD=$PWD
 
@@ -86,7 +88,7 @@ Use the following snippet to create a new file called, `keycloak-route.yaml`, re
       annotations:
         haproxy.router.openshift.io/balance: source
       name: keycloak
-      namespace: demo
+      namespace: eamli
     spec:
       host: {YOUR_DOMAIN}
       path: /auth
@@ -108,7 +110,7 @@ Use the following snippet to create a new file called, `keycloak-route.yaml`, re
 
 Save the file, then apply the route to the cluster
 
-    $ oc -n demo apply -f keycloak-route.yaml
+    $ oc -n eamli apply -f keycloak-route.yaml
 
 ### Keycloak host
 You can access the Keycloak instance publicly at `https://{YOUR DOMAIN}/auth`

@@ -91,15 +91,17 @@ Now that we have an PostgreSQL instance available, we need to expose configurati
 
 ### PostgreSQL user credentials
 
-The first thing we will need is the user credentials that will be used to access PostgreSQL. These can be found in the `postgres-pguser-postgres` secret.
+Eamli requires the user credentials that will be used to access PostgreSQL. These can be found in the `postgres-pguser-postgres` secret.
 Using the password, create the eamli secret for connecting to PostgreSQL.
 
     $ USER=$(oc -n demo get secret postgres-pguser-postgres -o go-template='{{index .data "user" | base64decode }}')
+    $ HOST=$(oc -n demo get secret postgres-pguser-postgres -o go-template='{{index .data "host" | base64decode }}')
     $ DB=$(oc -n demo get secret postgres-pguser-postgres -o go-template='{{index .data "dbname" | base64decode }}')
     $ PWD=$(oc -n demo get secret postgres-pguser-postgres -o go-template='{{index .data "password" | base64decode }}')
-    $ oc kubectl -n demo create secret generic eamli-postgresql-creds \
+    $ oc kubectl -n demo create secret generic eamli-postgresql-auth \
+        --from-literal=PSQL_INTERNAL_SERVICE_ADDRESS=$HOST \
         --from-literal=PQSL_USER=$USER \
-        --from-literal=PQSL_DATABASE=$USER \
+        --from-literal=PQSL_DATABASE=$DB \
         --from-literal=PQSL_PWD=$PWD
 
 

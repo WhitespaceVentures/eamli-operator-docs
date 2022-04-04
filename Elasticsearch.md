@@ -86,9 +86,13 @@ The first thing we will need is the user credentials that will be used to access
 By default, the username will be `elastic`. Using these credentials, we can then create the eamli secret for connecting to Elasticsearch.
 
     $ PWD=$(oc -n demo get secret elasticsearch-es-elastic-user -o go-template='{{index .data "elastic" | base64decode }}')
-    $ oc kubectl -n demo create secret generic eamli-elastic-creds \
-        --from-literal=ELS_USER="elastic" \
-        --from-literal=ELS_PWD=$PWD
+    $ oc kubectl -n demo create secret generic eamli-elasticsearch-auth \
+        --from-literal=ELS_SCHEME=https \
+        --from-literal=ELS_HOST=elasticsearch-es-http \
+        --from-literal=ELS_PORT=9200 \
+        --from-literal=ELS_USER=elastic \
+        --from-literal=ELS_PWD=$PWD \
+        --from-literal=ELS_CUSTOM_AC=true
 
 ### Elasticsearch TLS certificates
 
@@ -96,7 +100,7 @@ The Elasticsearch instance that was created by the operator will use self signed
 You can find certificate in the `elasticsearch-es-http-certs-public` secret, and then use this certificate to generate to create the PEM file for eamli to use
 
     $ CERT=$(oc -n demo get secret elasticsearch-es-http-certs-public -o go-template='{{index .data "tls.crt" | base64decode }}')
-    $ oc -n demo create secret generic eamli-elasticsearch-https-secret \
+    $ oc -n demo create secret generic eamli-elasticsearch-tls \
         --from-literal=ca.pem="${CERT}"
 
 ### Elasticsearch host

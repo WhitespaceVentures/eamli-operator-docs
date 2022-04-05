@@ -61,7 +61,7 @@ Once setup, you should have a secret created in the `eamli` namespace named `eam
 
 ### Postgresql
 
-To install a new PostgresSQL instance, check out the [Keycloak Quickstart](/Postgresql.md), for getting setup.
+To install a new PostgresSQL instance, check out the [PostgreSQL Quickstart](/Postgresql.md), for getting setup.
 
 Alternatively, if you already have an existing PostgresSQL instance available, see [PostgresSQL for eamli](/Postgresql.md#configuration-for-eamli) for configuring eamli to communicate with your instance.
 

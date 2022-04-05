@@ -89,10 +89,20 @@ By default, the username will be `elastic`. Using these credentials, we can then
     $ oc kubectl -n eamli create secret generic eamli-elasticsearch-auth \
         --from-literal=ELS_SCHEME=https \
         --from-literal=ELS_HOST=elasticsearch-es-http \
-        --from-literal=ELS_PORT=9200 \
         --from-literal=ELS_USER=elastic \
-        --from-literal=ELS_PWD=$PWD \
-        --from-literal=ELS_CUSTOM_AC=true
+        --from-literal=ELS_PWD=$PWD
+
+#### eamli-elasticsearch-auth config
+
+| Parameter             | Type    | Required | Default      | Description |
+| --------------------- | ------- | -------- | ------------ | ----------- |
+| `ELS_SCHEME`          | String  | N        | `"http"`     | Protocol used when communicating with Elasticsearch |
+| `ELS_HOST`            | String  | Y        | `""`         | The addressable endpoint where the Elasticsearch instance is available. Can be internal or external to the cluster |
+| `ELS_PORT`            | Integer | N        | `9200`       | Port to be used when communicating with Elasticsearch |
+| `ELS_USER`            | String  | N        | `""`         | Used for HTTP basic authentication |
+| `ELS_PWD`             | String  | N        | `""`         | Used for HTTP basic authentication |
+| `ELS_API_KEY`         | String  | N        | `""`         | Elasticsearch’s API Key for connecting to your cluster |
+| `ELS_CLOUD_ID`        | String  | N        | `""`         | Cloud ID of your Elastic Cloud deployment |
 
 ### Elasticsearch TLS certificates
 
@@ -102,6 +112,14 @@ You can find certificate in the `elasticsearch-es-http-certs-public` secret, and
     $ CERT=$(oc -n eamli get secret elasticsearch-es-http-certs-public -o go-template='{{index .data "tls.crt" | base64decode }}')
     $ oc -n eamli create secret generic eamli-elasticsearch-tls \
         --from-literal=ca.pem="${CERT}"
+
+#### eamli-elasticsearch-auth config
+
+| Parameter     | Type    | Required | Default      | Description |
+| ------------- | ------- | -------- | ------------ | ----------- |
+| `ca.pem`      | String  | N        | `""`         | Bundled certificates and keys for TLS |
+| `tls.cert`    | String  | N        | `""`         | Certificates for TLS |
+| `tls.key`     | String  | N        | `""`         | Keys for TLS |
 
 ### Elasticsearch host
 You can access the Elasticsearch instance within the cluster at `elasticsearch-es-http.eamli.svc`

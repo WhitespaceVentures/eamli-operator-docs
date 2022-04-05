@@ -68,11 +68,11 @@ Now that we have an Keycloak instance available, we need to expose configuration
 Eamli requires the user credentials that will be used to access Keycloak. These can be found in the `credential-eamli-keycloak` secret.
 Using these credentials, we can then create the eamli secret for connecting to Keycloak. (By default Keycloak creates the `master` realm)
 
-    $ USER=$(oc -n eamli get secret credential-eamli-keycloak -o go-template='{{index .data "ADMIN_USERNAME" | base64decode }}')
-    $ PWD=$(oc -n eamli get secret credential-eamli-keycloak -o go-template='{{index .data "ADMIN_PASSWORD" | base64decode }}')
+    $ USER=$(oc -n eamli get secret credential-keycloak -o go-template='{{index .data "ADMIN_USERNAME" | base64decode }}')
+    $ PWD=$(oc -n eamli get secret credential-keycloak -o go-template='{{index .data "ADMIN_PASSWORD" | base64decode }}')
     $ oc kubectl -n eamli create secret generic eamli-keycloak-auth \
-        --from-literal=KEYCLOAK_URL={YOUR_DOMAIN} \
         --from-literal=KEYCLOAK_REALM=master \
+        --from-literal=KEYCLOAK_URL=http://keycloak-discovery.eamli.svc \
         --from-literal=KEYCLOAK_USER=$USER \
         --from-literal=KEYCLOAK_PWD=$PWD
 

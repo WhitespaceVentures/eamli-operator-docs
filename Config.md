@@ -8,9 +8,6 @@
 | ----------------- | ------------------------- | -------- | ---------------- | ----------- |
 | `license`         | [License][17]             | Y        | `{}`             | Provides a section for accepting the eamli licensing agreement |
 | `ingress`         | [Ingress][14]             | Y        | `{}`             | Defines how eamli is exposed to public traffic |
-| `keycloak`        | [Keycloak][16]            | Y        | `{}`             | Defines how the eamli services will interact with the [Keycloak](https://www.keycloak.org/) instance |
-| `postgresql`      | [PostgreSQL][19]          | Y        | `{}`             | Defines how the eamli services will interact with the [PostgreSQL](https://www.postgresql.org/) instance |
-| `elasticsearch`   | [Elasticsearch][10]       | Y        | `{}`             | Defines how the eamli services will interact with the [Elasticsearch](https://www.elastic.co/) instance |
 | `apiserver`       | [EamliAPIServer][2]       | N        | `{}`             | API definition, for controlling the Eamli API Server within the cluster |
 | `productserver`   | [EamliProductServer][5]   | N        | `{}`             | API definition, for controlling the Eamli Product Server within the cluster |
 | `sourcedata`      | [EamliSourceData][7]      | N        | `{}`             | API definition, for controlling the Eamli Source Data within the cluster |
@@ -18,8 +15,8 @@
 
 ### EamliAPIServer
 
-| Parameter                 | Type                                  | Required | Default          | Description |
-| ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
+| Parameter                 | Type                              | Required | Default          | Description |
+| ------------------------- | --------------------------------- | -------- | ---------------- | ----------- |
 | `replicaCount`            | Integer                           | N        | `1`              | Number of pods to create for this deployment |
 | `image`                   | [Image][13]                       | N        | `{}`             | Defines the container image to be used for this service |
 | `podAnnotations`          | [PodAnnotations][25]              | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
@@ -94,15 +91,6 @@
 | `nodeSelector`            | [NodeSelector][18]                    | N        | `{}`             | The simplest recommended form of node selection constraint. |
 | `tolerations`             | [Tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
 
-### Elasticsearch
-
-| Parameter         | Type                  | Required | Default        | Description |
-| ----------------- | --------------------- | -------- | -------------- | ----------- |
-| `scheme`          | String                | N        | `"http"`       | The protocol used to communicate with the Elasticsearch instance |
-| `host`            | String                | Y        | `""`           | The addressable endpoint where the Elasticsearch instance is available. Can be internal or external to the cluster |
-| `port`            | Integer               | N        | `9200`         | Port to be used when communicating with Elasticsearch |
-| `customCA`        | Boolean               | N        | `false`        | Where or not to use custom certificates to communicate with Elasticsearch. If set to true, expects a secret named `elasticseach-https-secret` within the same namespace as the eamli operator, containing the custom PEM file (See the [Prerequisites section](https://whitespaceventures.github.io/eamli-operator-docs/#Prerequisites)) |
-
 ### Gunicorn
 
 | Parameter                 | Type                                  | Required | Default            | Description |
@@ -142,16 +130,6 @@
 | `hosts`           | List                  | N        | `[]`             | List of host names that match the TLS certificate |
 | `secretName`      | String                | N        | `""`             | Name of the kubernetes secret that contains the TLS certificate. The secret needs to be within the same namespace as the eamli operator |
 
-### Keycloak
-
-| Parameter                 | Type                  | Required | Default    | Description |
-| ------------------------- | --------------------- | -------- | ---------- | ----------- |
-| `host`                    | String                | Y        | `""`       | Public endpoint that the keycloak instance is available from |
-| `user`                    | String                | Y        | `""`       | Admin user for the keycloak instance |
-| `masterRealm`             | String                | Y        | `""`       | Primary (Default) realm to create the initial connection with |
-| `adminSecretName`         | String                | Y        | `""`       | Name of the secret containing Keycloak Creditials |
-| `adminSecretPasswordKey`  | String                | Y        | `""`       | Key within the secret that contains the keycloak admin password |
-
 ### License
 
 | Parameter         | Type                  | Required | Default          | Description |
@@ -164,17 +142,6 @@
 | ------------- | --------------------------------- | -------- | ---------------- | ----------- |
 | `enabled`     | boolean                           | N        | `false`          | Flag to enable node selector for the service pods |
 | `spec`        | [NodeSelectorSpec][22]            | N        | `""`             | See [https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) |
-
-### PostgreSQL
-
-| Parameter             | Type                  | Required | Default    | Description |
-| --------------------- | --------------------- | -------- | ---------- | ----------- |
-| `internalServiceAddr` | String                | N        | `""`       | Address of a PostgreSQL instance that is within the cluster. For example postgres.svc.{NS}.cluster.internal |
-| `externalAddr`        | String                | N        | `""`       | Address of a PostgreSQL instance that is external to the cluster. For example an AWS RDS instance |
-| `externalIP`          | String                | N        | `""`       | IP of a PostgreSQL instance that is external to the cluster. For example an AWS RDS instance ||
-| `port`                | Integer               | Y        | `5432`     | Port to use for sending requests to the PostgreSQL instance |
-| `adminUsername`       | String                | Y        | `""`       | PostgreSQL admin username, to generate users and databases with |
-| `adminDB`             | String                | Y        | `""`       | Default PostgreSQL database |
 
 ### Tolerations
 
@@ -193,16 +160,13 @@
 [7]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamlisourcedata> "EamliSourceData"
 [8]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamlisourcedataenvironment> "EamliSourceDataEnvironment"
 [9]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamliwebapp> "EamliWebApp"
-[10]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#elasticsearch> "Elasticsearch"
 [11]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#gunicorn> "Gunicorn"
 [12]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#horizontalpodautoscaler> "HorizontalPodAutoscaler"
 [13]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#image> "Image"
 [14]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#ingress> "Ingress"
 [15]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#ingresstls> "IngressTLS"
-[16]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#keycloak> "Keycloak"
 [17]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#license> "License"
 [18]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#nodeselector> "NodeSelector"
-[19]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#postgresql> "Postgresql"
 [20]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#tolerations> "Tolerations"
 [21]: <https://pkg.go.dev/k8s.io/api/autoscaling/v1#HorizontalPodAutoscalerSpec> "HorizontalPodAutoscalerSpec"
 [22]: <https://pkg.go.dev/k8s.io/api@v0.23.4/core/v1#NodeSelectorTerm> "NodeSelectorTerm"

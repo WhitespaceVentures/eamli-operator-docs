@@ -94,19 +94,25 @@ Now that we have an PostgreSQL instance available, we need to expose configurati
 Eamli requires the user credentials that will be used to access PostgreSQL. These can be found in the `postgres-pguser-postgres` secret.
 Using the password, create the eamli secret for connecting to PostgreSQL.
 
-    $ USER=$(oc -n eamli get secret postgres-pguser-postgres -o go-template='{{index .data "user" | base64decode }}')
     $ HOST=$(oc -n eamli get secret postgres-pguser-postgres -o go-template='{{index .data "host" | base64decode }}')
-    $ DB=$(oc -n eamli get secret postgres-pguser-postgres -o go-template='{{index .data "dbname" | base64decode }}')
     $ PWD=$(oc -n eamli get secret postgres-pguser-postgres -o go-template='{{index .data "password" | base64decode }}')
-    $ oc kubectl -n eamli create secret generic eamli-postgresql-auth \
-        --from-literal=PSQL_INTERNAL_SERVICE_ADDRESS=$HOST \
-        --from-literal=PQSL_USER=$USER \
-        --from-literal=PQSL_DATABASE=$DB \
-        --from-literal=PQSL_PWD=$PWD
+    $ oc kubectl -n eamli create secret generic eamli-database-auth \
+        --from-literal=DB_INTERNAL_ADDRESS=$HOST \
+        --from-literal=DB_PASSWORD=$PWD
 
-_If using an external database, replace `PSQL_INTERNAL_SERVICE_ADDRESS` with either `EXTERNAL_AADRESS` with the domain name of the instance, or `EXTERNAL_IP` if you do not have a domain name, and provide the IP address of the PostgreSQL instance._
+#### eamli-database-auth config
+
+| Parameter                     | Type    | Required | Default      | Description |
+| ----------------------------- | ------- | -------- | ------------ | ----------- |
+| `DB_INTERNAL_ADDRESS`         | String  | N        | `""`         | Domain of database instance within the same cluster as the operator |
+| `DB_EXTERNAL_ADDRESS`         | String  | N        | `""`         | Domain of external database instance |
+| `DB_EXTERNAL_IP`              | String  | N        | `""`         | IP address of external database instance |
+| `DB_NAME`                     | String  | N        | `"postgres"` | Name of the admin database |
+| `DB_PORT`                     | Integer | N        | `5432`       | Port used to connect to the database instance |
+| `DB_USERNAME`                 | String  | N        | `"postgres"` | Admin user name |
+| `DB_PASSWORD`                 | String  | Y        | `""`         | Admin user password |
 
 ### PostgreSQL host
 You can access the PostgreSQL instance within the cluster at `postgres-primary.eamli.svc`
 
-Alternatively if using an external database, you can access the instance from the cluster at `eamli-postgresql.eamli.svc`
+Alternatively if using an external database, you can access the instance from the cluster at `eamli-database.eamli.svc`

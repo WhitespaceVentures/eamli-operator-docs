@@ -22,8 +22,11 @@
 | `podAnnotations`          | [PodAnnotations][25]              | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
 | `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]     | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
 | `resources`               | [ResourceRequirements][23]        | N        | `{}`             | Specify how much of each resource a container needs. See [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
-| `nodeSelector`            | [NodeSelector][18]                | N        | `{}`             | The simplest recommended form of node selection constraint. |
-| `tolerations`             | [Tolerations][20]                 | N        | `{}`             | Define how pods should be scheduled for this service. |
+| `nodeSelector`            | [NodeSelector][18]                | N        | `{}`             | Selector which must match a node's labels for the pod to be scheduled on that node. |
+| `nodeName`                | String                            | N        | `""`             | Request to schedule pod onto a specific node. |
+| `affinity`                | [Affinity Rules][19]              | N        | `{}`             | Pod's scheduling constraints. |
+| `schedulerName`           | String                            | N        | `""`             | Pod will be dispatched by the specified scheduler. |
+| `tolerations`             | [Tolerations][20]                 | N        | `{}`             | Pod's tolerations. |
 | `environment`             | [EamliAPIServerEnvironment][3]    | N        | `{}`             | Defines the environment variables that are exposed to the service |
 
 ### EamliAPIServerEnvironment
@@ -48,8 +51,11 @@
 | `podAnnotations`          | [PodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
 | `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]         | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
 | `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
-| `nodeSelector`            | [NodeSelector][18]                    | N        | `{}`             | The simplest recommended form of node selection constraint. |
-| `tolerations`             | [Tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
+| `nodeSelector`            | [NodeSelector][18]                | N        | `{}`             | Selector which must match a node's labels for the pod to be scheduled on that node. |
+| `nodeName`                | String                            | N        | `""`             | Request to schedule pod onto a specific node. |
+| `affinity`                | [Affinity Rules][19]              | N        | `{}`             | Pod's scheduling constraints. |
+| `schedulerName`           | String                            | N        | `""`             | Pod will be dispatched by the specified scheduler. |
+| `tolerations`             | [Tolerations][20]                 | N        | `{}`             | Pod's tolerations. |
 | `environment`             | [EamliProductServerEnvironment][6]    | N        | `{}`             | Defines the environment variables that are exposed to the service |
 
 ### EamliProductServerEnvironment
@@ -68,8 +74,11 @@
 | `podAnnotations`          | [PodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
 | `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]         | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
 | `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
-| `nodeSelector`            | [NodeSelector][18]                    | N        | `{}`             | The simplest recommended form of node selection constraint. |
-| `tolerations`             | [Tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
+| `nodeSelector`            | [NodeSelector][18]                | N        | `{}`             | Selector which must match a node's labels for the pod to be scheduled on that node. |
+| `nodeName`                | String                            | N        | `""`             | Request to schedule pod onto a specific node. |
+| `affinity`                | [Affinity Rules][19]              | N        | `{}`             | Pod's scheduling constraints. |
+| `schedulerName`           | String                            | N        | `""`             | Pod will be dispatched by the specified scheduler. |
+| `tolerations`             | [Tolerations][20]                 | N        | `{}`             | Pod's tolerations. |
 | `environment`             | [EamliSourceDataEnvironment][8]       | N        | `{}`             | Defines the environment variables that are exposed to the service |
 
 ### EamliSourceDataEnvironment
@@ -88,8 +97,11 @@
 | `podAnnotations`          | [AodAnnotations][25]                  | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
 | `horizontalpodautoscaler` | [HorizontalPodAutoscaler][12]         | N        | `{}`             | The HorizontalPodAutoscaler defines how pods should scale for load. |
 | `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
-| `nodeSelector`            | [NodeSelector][18]                    | N        | `{}`             | The simplest recommended form of node selection constraint. |
-| `tolerations`             | [Tolerations][20]                     | N        | `{}`             | Define how pods should be scheduled for this service. |
+| `nodeSelector`            | [NodeSelector][18]                | N        | `{}`             | Selector which must match a node's labels for the pod to be scheduled on that node. |
+| `nodeName`                | String                            | N        | `""`             | Request to schedule pod onto a specific node. |
+| `affinity`                | [Affinity Rules][19]              | N        | `{}`             | Pod's scheduling constraints. |
+| `schedulerName`           | String                            | N        | `""`             | Pod will be dispatched by the specified scheduler. |
+| `tolerations`             | [Tolerations][20]                 | N        | `{}`             | Pod's tolerations. |
 
 ### Gunicorn
 
@@ -136,20 +148,6 @@
 | ----------------- | --------------------- | -------- | ---------------- | ----------- |
 | `accept`          | Boolean               | Y        | `false`          | Flag, to confirm you accept the eamli [EULA](https://eamli.com/eula) |
 
-### NodeSelector
-
-| Parameter     | Type                              | Required | Default          | Description |
-| ------------- | --------------------------------- | -------- | ---------------- | ----------- |
-| `enabled`     | boolean                           | N        | `false`          | Flag to enable node selector for the service pods |
-| `spec`        | [NodeSelectorSpec][22]            | N        | `""`             | See [https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector) |
-
-### Tolerations
-
-| Parameter     | Type                              | Required | Default          | Description |
-| ------------- | --------------------------------- | -------- | ---------------- | ----------- |
-| `enabled`     | boolean                           | N        | `false`          | Flag to enable tolerations for the service pods |
-| `spec`        | [TolerationSpec][24]              | N        | `{}`             | See [https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) |
-
 
 [1]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamli> "Eamli"
 [2]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamliapiserver> "EamliAPIServer"
@@ -166,8 +164,9 @@
 [14]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#ingress> "Ingress"
 [15]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#ingresstls> "IngressTLS"
 [17]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#license> "License"
-[18]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#nodeselector> "NodeSelector"
-[20]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#tolerations> "Tolerations"
+[18]: <https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector> "NodeSelector"
+[19]: <https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity> "Affinity"
+[20]: <https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/> "Tolerations"
 [21]: <https://pkg.go.dev/k8s.io/api/autoscaling/v1#HorizontalPodAutoscalerSpec> "HorizontalPodAutoscalerSpec"
 [22]: <https://pkg.go.dev/k8s.io/api@v0.23.4/core/v1#NodeSelectorTerm> "NodeSelectorTerm"
 [23]: <https://pkg.go.dev/k8s.io/api@v0.23.4/core/v1#ResourceRequirements> "ResourceRequirements"

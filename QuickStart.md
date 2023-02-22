@@ -131,12 +131,13 @@ Alternatively, you can create the stack from your command line with:
     spec:
       license:
         accept: true
-      ingress:
-        host: `[ public domain name ]`
-        tls:
-          - hosts:
-            - `[ public domain name ]`
-            secretName: eamli-public-tls
+      eamli-core:
+        ingress:
+          host: `[ public domain name ]`
+        database:
+          address: postgres-primary.eamli.svc.cluster.local
+        keycloak:
+          address: keycloak-service.eamli.svc.cluster.local
     EOF
 
 For full configuration options see the [configuration](/Config.md) document.
@@ -150,29 +151,28 @@ Alternative, from your console, run `oc -n eamli get pods`, you should see a sim
 
     NAME                                                              READY   STATUS      RESTARTS   AGE
     afc56cdfe349220543bd109da2e20ae59ed778a853cb80d953d6499ce64xmdt   0/1     Completed   0          130m
-    eamli-apiserver-6d4d96d57b-vn4wl                                  1/1     Running     0          127m
-    eamli-apiserver-seeder-ctrwm                                      0/1     Completed   0          128m
     eamli-operator-controller-manager-7c99f78b6f-cw5nb                2/2     Running     0          129m
-    eamli-productserver-6b65ffb989-vj6dp                              1/1     Running     0          126m
-    eamli-productserver-seeder-22r4t                                  0/1     Completed   0          126m
-    eamli-sourcedata-7d7c8ddd59-mbrkr                                 1/1     Running     0          126m
-    eamli-sourcedata-seeder-5zpkl                                     0/1     Completed   0          127m
-    eamli-webapp-946bff9f8-lpjvr                                      1/1     Running     0          128m
-    gitlab-com-whitedotspace-eamli-eamli-operator-bundle-0-12-2       1/1     Running     0          130m
+    eamli-ui-946bff9f8-lpjvr                                          1/1     Running     0          128m
+    keycloak-realm-22r4t                                              0/1     Completed   0          126m
+    productserver-6b65ffb989-vj6dp                                    1/1     Running     0          126m
+    productserver-seeder-22r4t                                        0/1     Completed   0          126m
+    sourcedata-7d7c8ddd59-mbrkr                                       1/1     Running     0          126m
+    sourcedata-seeder-5zpkl                                           0/1     Completed   0          127m
+    user-service-6d4d96d57b-vn4wl                                     1/1     Running     0          127m
+    user-service-seeder-ctrwm                                         0/1     Completed   0          128m
+    gitlab-com-whitedotspace-eamli-eamli-operator-bundle-1-0-0        1/1     Running     0          130m
 
-## Eamli dashboard
+## Initial user
 
-Once you have installed the Eamli stack, you should be able to head over to https://[YOUR_DOMAIN], and should be redirected to log in.
+eamli is bootstrapped with a default user, but it requires users to set the user's password prior to log in.
 
-![Login Screen](/imgs/eamli-operator/LoginScreen.png)
+Head over to https://[YOUR_DOMAIN]/auth, and login with the keycloak admin details
 
-You can log in, using the default creditials
+    $ oc -n eamli get secret keycloak-initial-admin -o go-template='{{index .data "username" | base64decode }}'
+    $ oc -n eamli get secret keycloak-initial-admin -o go-template='{{index .data "password" | base64decode }}'
 
-    U: server-admin
-    P: password
+Once logged in, navigate to the `eamli` realm, and select `users -> server-admin -> Credentails -> Reset password`
 
-You will then be prompted to change the password. It will need to contain, a lowercase, uppercase, numeric and special characters.
-
-Once logged in, you will be greeted with the Eamli dashboard.
+You should now be able to log into the eamli homepage at https://[YOUR_DOMAIN], with the new credentials you created.
 
 ![Home Screen](/imgs/eamli-operator/Homepage.png)

@@ -125,7 +125,6 @@ Using these credentials, we can then create the eamli secret for connecting to K
         --from-literal=KEYCLOAK_SCHEME="http" \
         --from-literal=KEYCLOAK_REALM="master" \
         --from-literal=KEYCLOAK_HTTPS="true" \
-        --from-literal=KEYCLOAK_ADDRESS="keycloak-discovery.eamli.svc" \
         --from-literal=KEYCLOAK_PORT="8080" \
         --from-literal=KEYCLOAK_USER=$USER \
         --from-literal=KEYCLOAK_PWD=$PWD \

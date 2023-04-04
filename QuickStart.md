@@ -10,14 +10,6 @@ Before you begin, ensure you have recieved your unique customer details. You wil
 
 This is your own public domain, that you will use to serve the eamli platform on (eg `example.com`)
 
-#### TLS certificate
-
-If you want to serve eamli using TLS (`https://`), you will need to create a new TLS secret.
-
-Download your domain TLS certificate and key files, and save them as `tls.cert` and `tls.key`. Then create a new TLS secret with:
-
-    $ oc -n eamli create secret tls eamli-public-tls --cert=tls.cert --key=tls.key
-
 ### Namepsace
 
 Create a new namespace for eamli an its related services to live in.
@@ -33,6 +25,23 @@ Alternatively from the command line:
 
      $ oc create ns eamli
 
+### Postgresql
+
+To install a new PostgresSQL instance, check out the [PostgreSQL Quickstart](/Postgresql.md), for getting setup.
+
+Alternatively, if you already have an existing PostgresSQL instance available, see [PostgresSQL for eamli](/Postgresql.md#configuration-for-eamli) for configuring eamli to communicate with your instance.
+
+Once setup, you should have a secret created in the `eamli` namespace named `eamli-postgresql-auth` with the connection details defined.
+
+#### Database user credentials
+
+    $ oc -n eamli create secret generic eamli-database-auth \
+        --from-literal DB_ADDRESS=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.host | base64decode }}') \
+        --from-literal DB_PORT=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.port | base64decode }}') \
+        --from-literal DB_PRODUCT_SERVER_PWD=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.password | base64decode }}') \
+        --from-literal DB_SOURCE_DATA_PWD=$(oc -n eamli get secret postgres-pguser-sourcedata --template='{{ .data.password | base64decode }}') \
+        --from-literal DB_USER_SERVICE_PWD=$(oc -n eamli get secret postgres-pguser-userservice --template='{{ .data.password | base64decode }}')
+
 ### Keycloak
 
 To install a new Keycloak instance, check out the [Keycloak Quickstart](/Keycloak.md), for getting setup.
@@ -41,13 +50,21 @@ Alternatively, if you already have an existing Keycloak instance available, see 
 
 Once setup, you should have a secret created in the `eamli` namespace named `eamli-keycloak-auth` with the connection details defined.
 
-### Postgresql
+#### Keycloak user credentials
 
-To install a new PostgresSQL instance, check out the [PostgreSQL Quickstart](/Postgresql.md), for getting setup.
+eamli requires the user credentials that will be used to access Keycloak. These can be found in the `credential-eamli-keycloak` secret.
+Using these credentials, we can then create the eamli secret for connecting to Keycloak. (By default Keycloak creates the `master` realm), replacing the `KEYCLOAK_SMTP_CONFIG` properties as appropriate.
+If you do not intend to invite users to the platform via email, you can ommit the `KEYCLOAK_SMTP_CONFIG` property from the secret.
 
-Alternatively, if you already have an existing PostgresSQL instance available, see [PostgresSQL for eamli](/Postgresql.md#configuration-for-eamli) for configuring eamli to communicate with your instance.
-
-Once setup, you should have a secret created in the `eamli` namespace named `eamli-postgresql-auth` with the connection details defined.
+    $ oc -n eamli create secret generic eamli-keycloak-auth \
+        --from-literal=KEYCLOAK_SCHEME="http" \
+        --from-literal=KEYCLOAK_REALM="master" \
+        --from-literal=KEYCLOAK_HTTPS="true" \
+        --from-literal=KEYCLOAK_PORT="8080" \
+        --from-literal=KEYCLOAK_USER=$(oc -n eamli get secret keycloak-initial-admin -o go-template='{{index .data "username" | base64decode }}') \
+        --from-literal=KEYCLOAK_PWD=$(oc -n eamli get secret keycloak-initial-admin -o go-template='{{index .data "password" | base64decode }}') \
+        --from-literal=KEYCLOAK_PUBLIC_KEY="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjYsLSqw2YdUVzT69GOUS+3dSoIz4MzkIJ4EeHj6Iyg6jsQbPh5It3Q6gyhpIAkEtafcTQ9+bv6Y7D7ka2y/Ik69i+iLJYbH1AiJzCXE6I0SLUs6u6uCL7e1wgkFFRlLXP3NMmawRDRBySHE5VqTmr1biEVpcZ/qqKqeT94doFctVkgCumXfEyiPXiccoKUVEWNj2hsWnpEOfHtXdbOiDbgS6i7WUtPh5Tig+29/t91wvlGIOWDLoUD8WPeP8FtAM3WlhZtB/Bt9l+1Xx3lYvrvO5h9dwP0JwpCtmaLd5wGI7mGI1Ku9pp6Vkg2eQ/TnICNmQcn7BgWZ7febciKNDkQIDAQAB" \
+        --from-literal=KEYCLOAK_SMTP_CONFIG='{"password"="***","starttls"="true/false","auth"="true/false","port"="***","host"="***","from"="***","ssl"="true/false","user"="**"}'
 
 ## Operator installation from Red Hat Marketplace
 
@@ -81,15 +98,6 @@ select an option.
 ![Operator Dashboard](/imgs/eamli-operator/OperatorDashboard.png)
 
 ## Application installation
-
-setup eamli
-
-    oc -n eamli create secret generic eamli-database-auth \
-        --from-literal DB_ADDRESS=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.host | base64decode }}') \
-        --from-literal DB_PORT=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.port | base64decode }}') \
-        --from-literal DB_PRODUCT_SERVER_PWD=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.password | base64decode }}') \
-        --from-literal DB_SOURCE_DATA_PWD=$(oc -n eamli get secret postgres-pguser-sourcedata --template='{{ .data.password | base64decode }}') \
-        --from-literal DB_USER_SERVICE_PWD=$(oc -n eamli get secret postgres-pguser-userservice --template='{{ .data.password | base64decode }}')
 
 ### Image pull secret
 

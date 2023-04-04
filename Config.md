@@ -9,7 +9,9 @@
 | `license`         | [License][17]             | Y        | `{}`             | Provides a section for accepting the eamli licensing agreement |
 | `eamlicore`       | [EamliCore][2]            | Y        | `{}`             | API definition, ingress and third-party resources |
 | `eamliui`         | [EamliUI][3]              | N        | `{}`             | API definition, for the Eamli UI service |
+| `eamliweb`        | [EamliWeb][8]             | N        | `{}`             | API definition, for the Eamli Web service |
 | `keycloakrealm`   | [KeycloakRealm][4]        | N        | `{}`             | API definition, for the Keycloak Realm service |
+| `modelstore`      | [ModelStore][9]           | N        | `{}`             | API definition, for the Model Store service |
 | `productserver`   | [ProductServer][5]        | N        | `{}`             | API definition, for the Product Server service |
 | `sourcedata`      | [SourceData][6]           | N        | `{}`             | API definition, for the Source Data service |
 | `userservice`     | [UserService][7]          | N        | `{}`             | API definition, for the User Service service |
@@ -31,7 +33,25 @@
 | `podAnnotations`          | [Annotations][25]                     | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
 | `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
 
+### EamliWeb
+
+| Parameter                 | Type                                  | Required | Default          | Description |
+| ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
+| `image`                   | [Image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
+| `serviceAnnotations`      | [Annotations][25]                     | N        | `{}`             | Annotations to attach metadata to the service. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
+| `podAnnotations`          | [Annotations][25]                     | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
+| `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
+
 ### KeycloakRealm
+
+| Parameter                 | Type                                  | Required | Default          | Description |
+| ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
+| `image`                   | [Image][13]                           | N        | `{}`             | Defines the container image to be used for this service |
+| `serviceAnnotations`      | [Annotations][25]                     | N        | `{}`             | Annotations to attach metadata to the service. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
+| `podAnnotations`          | [Annotations][25]                     | N        | `{}`             | Annotations to attach metadata to the pods. See [https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/) |
+| `resources`               | [ResourceRequirements][23]            | N        | `{}`             | Specify how much of each resource a container needs. See [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
+
+### ModelStore
 
 | Parameter                 | Type                                  | Required | Default          | Description |
 | ------------------------- | ------------------------------------- | -------- | ---------------- | ----------- |
@@ -105,6 +125,8 @@ Either one of `address` or `ip` and `port` is required
 [5]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#productserver> "ProductServer"
 [6]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#sourcedata> "SourceData"
 [7]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#userservice> "UserService"
+[8]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#eamliweb> "EamliWeb"
+[9]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#modelstore> "ModelStore"
 [13]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#image> "Image"
 [14]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#ingress> "Ingress"
 [15]: <https://whitespaceventures.github.io/eamli-operator-docs/Config.html#third-party-service> "ThirdPartyService"

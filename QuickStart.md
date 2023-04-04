@@ -33,24 +33,6 @@ Alternatively from the command line:
 
      $ oc create ns eamli
 
-![Create secret](/imgs/eamli-operator/CreateSecret.png)
-
-Alternatively from the command line:
-
-    $ oc -n eamli create secret docker-registry eamli-auth \
-        --docker-server=registry.gitlab.com \
-        --docker-username="`[ unique customer username ]`" \
-        --docker-password="`[ unique customer secret ]`" \
-        --docker-email="`[ unique customer email ]`"
-
-### Elasticsearch
-
-To create a new elasticsearch install, we have provided a quick start guide for getting you setup (See the [Elasticseasrch Quickstart](/Elasticsearch.md)).
-
-Alternatively, if you already have an Elasticsearch instance available, see [Elasticsearch for eamli](/Postgresql.md#configuration-for-eamli) for configuring eamli to communicate with your instance.
-
-Once setup, you should have a secret created in the `eamli` namespace named `eamli-elasticsearch-auth` with the connection details defined. If Elasticsearch is using its own certificates for TLS, you should also have the `eamli-elasticsearch-tls` secret defined.
-
 ### Keycloak
 
 To install a new Keycloak instance, check out the [Keycloak Quickstart](/Keycloak.md), for getting setup.
@@ -100,22 +82,62 @@ select an option.
 
 ## Application installation
 
-### Pull secret
+setup eamli
 
-You will need to install a Kubernetes Secret, to allow the eamli oeprator to pull down the private images used within the eamli platform.
+    oc -n eamli create secret generic eamli-database-auth \
+        --from-literal DB_ADDRESS=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.host | base64decode }}') \
+        --from-literal DB_PORT=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.port | base64decode }}') \
+        --from-literal DB_PRODUCT_SERVER_PWD=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.password | base64decode }}') \
+        --from-literal DB_SOURCE_DATA_PWD=$(oc -n eamli get secret postgres-pguser-sourcedata --template='{{ .data.password | base64decode }}') \
+        --from-literal DB_USER_SERVICE_PWD=$(oc -n eamli get secret postgres-pguser-userservice --template='{{ .data.password | base64decode }}')
+
+### Image pull secret
+
+You will need to install a Kubernetes Secret, to allow the eamli operator to pull down the private images used within the eamli platform.
 
 From the Openshift console (as administrator)
 
 * On the sidebar, select Workloads -> Secrets
 * Ensure the "Project", at the top of the secrets dashboard is set to `eamli`
 * From the Secrets dashboard, click on the "Create" in the top right corner, and select "Image pull secret".
-  * Secret name: `gitlab-auth`
+  * Secret name: `eamli-image-auth`
   * Authentication type: `Image registry credentials`
   * Registry server address: `registry.gitlab.com`
   * Username: `[ unique customer username ]`
   * Password: `[ unique customer secret ]`
   * Eamli: `[ unique customer email ]`
 * Once complete, click "Create".
+
+![Create secret](/imgs/eamli-operator/CreateSecret.png)
+
+Alternatively from the command line:
+
+    $ oc -n eamli create secret docker-registry eamli-image-auth \
+        --docker-server=registry.gitlab.com \
+        --docker-username="`[ unique customer username ]`" \
+        --docker-password="`[ unique customer secret ]`" \
+        --docker-email="`[ unique customer email ]`"
+
+### Public SSL secret
+
+While optional, it is recommended to run eamli with a valid SSL certificate. Using your method of choice, generate a new tls certifate for the domain which will server eamli.
+You should have two files once the certifate is created, `tls.key` and `tls.cert`.
+
+From the Openshift console (as administrator)
+
+* On the sidebar, select Workloads -> Secrets
+* Ensure the "Project", at the top of the secrets dashboard is set to `eamli`
+* From the Secrets dashboard, click on the "Create" in the top right corner, and select "Key/value secret".
+  * Secret name: `eamli-public-tls`
+  * key: `tls.key`, value: path/to/tls.key
+  * key: `tls.cert`, value: path/to/tls.cert
+* Once complete, click "Create".
+
+Alternatively from the command line:
+
+    $ oc -n eamli create secret tls eamli-public-tls \
+        --cert=path/to/tls.cert \
+        --key=path/to/tls.key
 
 ### Creating an eamli instance
 
@@ -133,7 +155,10 @@ Alternatively, you can create the stack from your command line with:
         accept: true
       eamli-core:
         ingress:
-          host: `[ public domain name ]`
+          enabled: true
+          host: [your domain name]
+          tls:
+            secretName: eamli-public-tls
         database:
           address: postgres-primary.eamli.svc.cluster.local
         keycloak:
@@ -153,7 +178,9 @@ Alternative, from your console, run `oc -n eamli get pods`, you should see a sim
     afc56cdfe349220543bd109da2e20ae59ed778a853cb80d953d6499ce64xmdt   0/1     Completed   0          130m
     eamli-operator-controller-manager-7c99f78b6f-cw5nb                2/2     Running     0          129m
     eamli-ui-946bff9f8-lpjvr                                          1/1     Running     0          128m
+    eamli-web-546d46c558-5pkw8                                        1/1     Running     0          128m
     keycloak-realm-22r4t                                              0/1     Completed   0          126m
+    model-store-5fd7ddc788-xncjn.                                     1/1     Running     0          126m
     productserver-6b65ffb989-vj6dp                                    1/1     Running     0          126m
     productserver-seeder-22r4t                                        0/1     Completed   0          126m
     sourcedata-7d7c8ddd59-mbrkr                                       1/1     Running     0          126m

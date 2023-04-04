@@ -26,7 +26,29 @@ Now in the Crunchy Postgres for Kubernetes dashboard, select the "PostgresCluste
       name: postgres
       namespace: eamli
     spec:
+      image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres-gis:ubi8-14.7-3.3-0
       port: 5432
+      users:
+        - databases:
+            - keycloak
+          password:
+            type: AlphaNumeric
+          name: keycloak
+        - databases:
+            - productserver
+          password:
+            type: AlphaNumeric
+          name: productserver
+        - databases:
+            - sourcedata
+          password:
+            type: AlphaNumeric
+          name: sourcedata
+        - databases:
+            - userservice
+          password:
+            type: AlphaNumeric
+          name: userservice
       backups:
         pgbackrest:
           restore:
@@ -50,7 +72,7 @@ Now in the Crunchy Postgres for Kubernetes dashboard, select the "PostgresCluste
               requests:
                 storage: 10Gi
           replicas: 1
-      postgresVersion: 13
+      postgresVersion: 14
 
 After a couple of minutes, you should see the pod and service come up
 
@@ -84,35 +106,3 @@ After a couple of minutes, you should see the pod and service come up
     postgres-pguser-postgres                   Opaque                                8      4m6s
     postgres-replication-cert                  Opaque                                3      4m9s
     postgres-ssh                               Opaque                                3      4m5s
-
-## Configuration for eamli
-
-Now that we have an PostgreSQL instance available, we need to expose configuration for the eamli service
-
-### PostgreSQL user credentials
-
-Eamli requires the user credentials that will be used to access PostgreSQL. These can be found in the `postgres-pguser-postgres` secret.
-Using the password, create the eamli secret for connecting to PostgreSQL.
-
-    $ HOST=$(oc -n eamli get secret postgres-pguser-postgres -o go-template='{{index .data "host" | base64decode }}')
-    $ PWD=$(oc -n eamli get secret postgres-pguser-postgres -o go-template='{{index .data "password" | base64decode }}')
-    $ oc kubectl -n eamli create secret generic eamli-database-auth \
-        --from-literal=DB_INTERNAL_ADDRESS=$HOST \
-        --from-literal=DB_PASSWORD=$PWD
-
-#### eamli-database-auth config
-
-| Parameter                     | Type    | Required | Default      | Description |
-| ----------------------------- | ------- | -------- | ------------ | ----------- |
-| `DB_INTERNAL_ADDRESS`         | String  | N        | `""`         | Domain of database instance within the same cluster as the operator |
-| `DB_EXTERNAL_ADDRESS`         | String  | N        | `""`         | Domain of external database instance |
-| `DB_EXTERNAL_IP`              | String  | N        | `""`         | IP address of external database instance |
-| `DB_NAME`                     | String  | N        | `"postgres"` | Name of the admin database |
-| `DB_PORT`                     | Integer | N        | `5432`       | Port used to connect to the database instance |
-| `DB_USERNAME`                 | String  | N        | `"postgres"` | Admin user name |
-| `DB_PASSWORD`                 | String  | Y        | `""`         | Admin user password |
-
-### PostgreSQL host
-You can access the PostgreSQL instance within the cluster at `postgres-primary.eamli.svc`
-
-Alternatively if using an external database, you can access the instance from the cluster at `eamli-database.eamli.svc`

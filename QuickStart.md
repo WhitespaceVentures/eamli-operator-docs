@@ -36,8 +36,8 @@ Once setup, you should have a secret created in the `eamli` namespace named `eam
 #### Database user credentials
 
     $ oc -n eamli create secret generic eamli-database-auth \
-        --from-literal DB_ADDRESS=$(oc -n eamli get secret postgres-pguser-productserver --template='\{\{ .data.host | base64decode \}\}') \
-        --from-literal DB_PORT=$(oc -n eamli get secret postgres-pguser-productserver --template='\{\{ .data.port | base64decode \}\}') \
+        --from-literal DB_ADDRESS=$(oc -n eamli get secret postgres-pguser-productserver --template='{ .data.host | base64decode }') \
+        --from-literal DB_PORT=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.port | base64decode }}') \
         --from-literal DB_PRODUCT_SERVER_PWD=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.password | base64decode }}') \
         --from-literal DB_SOURCE_DATA_PWD=$(oc -n eamli get secret postgres-pguser-sourcedata --template='{{ .data.password | base64decode }}') \
         --from-literal DB_USER_SERVICE_PWD=$(oc -n eamli get secret postgres-pguser-userservice --template='{{ .data.password | base64decode }}')

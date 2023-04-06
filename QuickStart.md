@@ -42,7 +42,6 @@ Once setup, you should have a secret created in the `eamli` namespace named `eam
         --from-literal DB_SOURCE_DATA_PWD=$(oc -n eamli get secret postgres-pguser-sourcedata -o jsonpath='{ .data.password }' | base64 -D) \
         --from-literal DB_USER_SERVICE_PWD=$(oc -n eamli get secret postgres-pguser-userservice -o jsonpath='{ .data.password }' | base64 -D)
 
-
 ### Keycloak
 
 To install a new Keycloak instance, check out the [Keycloak Quickstart](/Keycloak.md), for getting setup.
@@ -114,7 +113,6 @@ From the Openshift console (as administrator)
   * Registry server address: `registry.gitlab.com`
   * Username: `[ unique customer username ]`
   * Password: `[ unique customer secret ]`
-  * Eamli: `[ unique customer email ]`
 * Once complete, click "Create".
 
 ![Create secret](/imgs/eamli-operator/CreateSecret.png)
@@ -124,8 +122,7 @@ Alternatively from the command line:
     $ oc -n eamli create secret docker-registry eamli-image-auth \
         --docker-server=registry.gitlab.com \
         --docker-username="`[ unique customer username ]`" \
-        --docker-password="`[ unique customer secret ]`" \
-        --docker-email="`[ unique customer email ]`"
+        --docker-password="`[ unique customer secret ]`"
 
 ### Public SSL secret
 
@@ -201,8 +198,8 @@ eamli is bootstrapped with a default user, but it requires users to set the user
 
 Head over to https://[YOUR_DOMAIN]/auth, and login with the keycloak admin details
 
-    $ oc -n eamli get secret keycloak-initial-admin -o jsonpath='{ .data.username }' | base64 -D'
-    $ oc -n eamli get secret keycloak-initial-admin -o jsonpath='{ .data.password }' | base64 -D'
+    $ oc -n eamli get secret keycloak-initial-admin -o jsonpath='{ .data.username }' | base64 -D
+    $ oc -n eamli get secret keycloak-initial-admin -o jsonpath='{ .data.password }' | base64 -D
 
 Once logged in, navigate to the `eamli` realm, and select `users -> server-admin -> Credentails -> Reset password`
 

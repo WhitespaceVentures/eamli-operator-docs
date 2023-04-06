@@ -12,7 +12,7 @@ Create a secret within the same namespace as keycloak will be installed into, co
 
     $ oc -n eamli create secret generic keycloak-db-secret \
         --from-literal POSTGRES_USERNAME=keycloak \
-        --from-literal POSTGRES_PASSWORD=$(oc -n eamli get secret postgres-pguser-keycloak -o jsonpath='{ .data.password }' | base64 -D')
+        --from-literal POSTGRES_PASSWORD=$(oc -n eamli get secret postgres-pguser-keycloak -o jsonpath='{ .data.password }' | base64 -D)
 
 ### Custom providers
 

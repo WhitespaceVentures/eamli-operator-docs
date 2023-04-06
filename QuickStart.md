@@ -36,11 +36,12 @@ Once setup, you should have a secret created in the `eamli` namespace named `eam
 #### Database user credentials
 
     $ oc -n eamli create secret generic eamli-database-auth \
-        --from-literal DB_ADDRESS=$(oc -n eamli get secret postgres-pguser-productserver --template='{ .data.host | base64decode }') \
-        --from-literal DB_PORT=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.port | base64decode }}') \
-        --from-literal DB_PRODUCT_SERVER_PWD=$(oc -n eamli get secret postgres-pguser-productserver --template='{{ .data.password | base64decode }}') \
-        --from-literal DB_SOURCE_DATA_PWD=$(oc -n eamli get secret postgres-pguser-sourcedata --template='{{ .data.password | base64decode }}') \
-        --from-literal DB_USER_SERVICE_PWD=$(oc -n eamli get secret postgres-pguser-userservice --template='{{ .data.password | base64decode }}')
+        --from-literal DB_ADDRESS=$(oc -n eamli get secret postgres-pguser-productserver -o jsonpath='{ .data.host }' | base64 -D) \
+        --from-literal DB_PORT=$(oc -n eamli get secret postgres-pguser-productserver -o jsonpath='{ .data.port }' | base64 -D) \
+        --from-literal DB_PRODUCT_SERVER_PWD=$(oc -n eamli get secret postgres-pguser-productserver -o jsonpath='{ .data.password }' | base64 -D) \
+        --from-literal DB_SOURCE_DATA_PWD=$(oc -n eamli get secret postgres-pguser-sourcedata -o jsonpath='{ .data.password }' | base64 -D) \
+        --from-literal DB_USER_SERVICE_PWD=$(oc -n eamli get secret postgres-pguser-userservice -o jsonpath='{ .data.password }' | base64 -D)
+
 
 ### Keycloak
 
@@ -61,8 +62,8 @@ If you do not intend to invite users to the platform via email, you can ommit th
         --from-literal=KEYCLOAK_REALM="master" \
         --from-literal=KEYCLOAK_HTTPS="true" \
         --from-literal=KEYCLOAK_PORT="8080" \
-        --from-literal=KEYCLOAK_USER=$(oc -n eamli get secret keycloak-initial-admin -o go-template='{{index .data "username" | base64decode }}') \
-        --from-literal=KEYCLOAK_PWD=$(oc -n eamli get secret keycloak-initial-admin -o go-template='{{index .data "password" | base64decode }}') \
+        --from-literal=KEYCLOAK_USER=$(oc -n eamli get secret keycloak-initial-admin -o jsonpath='{ .data.username }' | base64 -D) \
+        --from-literal=KEYCLOAK_PWD=$(oc -n eamli get secret keycloak-initial-admin -o jsonpath='{ .data.password }' | base64 -D) \
         --from-literal=KEYCLOAK_PUBLIC_KEY="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjYsLSqw2YdUVzT69GOUS+3dSoIz4MzkIJ4EeHj6Iyg6jsQbPh5It3Q6gyhpIAkEtafcTQ9+bv6Y7D7ka2y/Ik69i+iLJYbH1AiJzCXE6I0SLUs6u6uCL7e1wgkFFRlLXP3NMmawRDRBySHE5VqTmr1biEVpcZ/qqKqeT94doFctVkgCumXfEyiPXiccoKUVEWNj2hsWnpEOfHtXdbOiDbgS6i7WUtPh5Tig+29/t91wvlGIOWDLoUD8WPeP8FtAM3WlhZtB/Bt9l+1Xx3lYvrvO5h9dwP0JwpCtmaLd5wGI7mGI1Ku9pp6Vkg2eQ/TnICNmQcn7BgWZ7febciKNDkQIDAQAB" \
         --from-literal=KEYCLOAK_SMTP_CONFIG='{"password"="***","starttls"="true/false","auth"="true/false","port"="***","host"="***","from"="***","ssl"="true/false","user"="**"}'
 
@@ -149,11 +150,8 @@ Alternatively from the command line:
 
 ### Creating an eamli instance
 
-Click on the "Eamli" tab, then click "Create Eamli", and fill out the sections as required.
+Now in the Eamli Operator dashboard, select the "Eamli" tab, and click "Create Eamli". Select "YAML view" and update the YAML with the following, replacing the `eamli-core.host` value as appropriate:
 
-Alternatively, you can create the stack from your command line with:
-
-    $ cat <<EOF | oc -n eamli apply -f -
     apiVersion: eamli.com/v1alpha1
     kind: Eamli
     metadata:
@@ -203,8 +201,8 @@ eamli is bootstrapped with a default user, but it requires users to set the user
 
 Head over to https://[YOUR_DOMAIN]/auth, and login with the keycloak admin details
 
-    $ oc -n eamli get secret keycloak-initial-admin -o go-template='{{index .data "username" | base64decode }}'
-    $ oc -n eamli get secret keycloak-initial-admin -o go-template='{{index .data "password" | base64decode }}'
+    $ oc -n eamli get secret keycloak-initial-admin -o jsonpath='{ .data.username }' | base64 -D'
+    $ oc -n eamli get secret keycloak-initial-admin -o jsonpath='{ .data.password }' | base64 -D'
 
 Once logged in, navigate to the `eamli` realm, and select `users -> server-admin -> Credentails -> Reset password`
 

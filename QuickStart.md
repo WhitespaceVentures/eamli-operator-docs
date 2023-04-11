@@ -166,7 +166,6 @@ Now in the Eamli Operator dashboard, select the "Eamli" tab, and click "Create E
           address: postgres-primary.eamli.svc.cluster.local
         keycloak:
           address: keycloak-service.eamli.svc.cluster.local
-    EOF
 
 For full configuration options see the [configuration](/Config.md) document.
 
